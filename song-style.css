@@ -1,0 +1,170 @@
+/* Import Modern Font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400&display=swap');
+
+/* General Page Styling */
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #000000; /* Match black background */
+    color: #FFFFFF; /* White text */
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+/* Container for Aligning Everything to the GIF Width */
+.content-container {
+    max-width: 400px; /* Increased width */
+    margin: auto;
+    text-align: center;
+}
+
+/* Site Logo */
+.site-logo {
+    font-size: 20px; /* Reduced font size */
+    font-weight: 300; /* Thinner font */
+    text-align: left;
+    padding: 5px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 400px; /* Align with new width */
+}
+
+/* Back Button */
+.back {
+    display: block;
+    text-align: left;
+    margin-left: 15px;
+    margin-right: 15px;
+    text-align: left;
+    margin: 15px auto; /* Adds 15px padding on both sides */
+    color: #CCCCCC;
+    text-decoration: none;
+    text-transform: lowercase;
+    font-size: 14px;
+    max-width: 400px;
+}
+
+.back:hover {
+    color: #FFFFFF;
+}
+
+/* Song Page Layout */
+.song-container {
+    max-width: 400px; /* Matches increased width */
+    margin: auto;
+    padding: 15px; /* Slightly reduced padding */
+    text-align: center;
+}
+
+/* Song GIF */
+.song-art {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    margin: 10px auto 15px; /* Reduced spacing between title and GIF */
+    box-shadow: 0px 8px 24px rgba(255, 255, 255, 0.2);
+}
+
+/* 🎵 Song Title */
+h1#songTitle {
+    margin-top: 15px;
+    font-weight: 300; /* Thinner text */
+    font-size: 22px;
+}
+
+/* 🎵 Custom Music Player */
+.audio-container {
+    background: rgba(255, 255, 255, 0.1); /* Translucent like tracklist buttons */
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.2);
+    margin: 15px auto; /* Adjusted margin */
+    max-width: 400px; /* Align with new width */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Play/Pause Button */
+.player-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Seek Bar */
+#seekBar {
+    flex: 1;
+    appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    outline: none;
+    transition: background 0.3s ease-in-out;
+}
+
+#seekBar:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Feedback Section */
+.feedback-title {
+    font-size: 14px;
+    color: #CCCCCC;
+    margin-top: 30px; /* Increased space below player bar */
+}
+
+/* Feedback Buttons - White Outlined Icons */
+.feedback-buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feedback-buttons button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Icons are white outlines with thinner stroke */
+.feedback-buttons button i {
+    font-size: 30px;
+    color: white;
+    font-weight: 100; /* Thinner stroke */
+}
+
+/* When a button is selected, it fills in white */
+.feedback-buttons button.selected i {
+    color: white;
+    font-weight: 300; /* Slightly thicker than default but not too bold */
+}
+
+/* Hover Effect */
+.feedback-buttons button:hover {
+    transform: scale(1.2);
+}
+
+/* Mobile-Friendly Styles */
+@media (max-width: 600px) {
+    .song-art {
+        max-width: 250px;
+    }
+    .content-container {
+        max-width: 250px;
+    }
+    .audio-container {
+        max-width: 250px;
+    }
+}

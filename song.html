@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing</title>
+    <link rel="stylesheet" href="song-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+    <a href="index.html" class="back">← Back to Album</a>
+    <h1 class="site-logo">the rogue orchestra</h1>
+
+    <div class="song-container">
+        <img src="assets/album.gif" alt="Song Art" class="song-art">
+        <h1 id="songTitle"></h1>
+
+        <div class="audio-container">
+            <button id="playPauseBtn" class="player-btn">▶</button>
+            <input type="range" id="seekBar" value="0">
+            <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
+            <audio id="audioPlayer">
+                <source id="audioSource" src="" type="audio/mp3">
+            </audio>
+        </div>
+
+        <p id="songDescription"></p>
+        <p><em id="experienceText"></em></p>
+
+        <p class="feedback-title">Did you like this song? Leave your feedback here!</p>
+        <div class="feedback-buttons">
+            <button id="thumbsUp"><i class="fa-regular fa-thumbs-up"></i></button>
+            <button id="thumbsDown"><i class="fa-regular fa-thumbs-down"></i></button>
+            <button id="heart"><i class="fa-regular fa-heart"></i></button>
+            <button id="star"><i class="fa-regular fa-star"></i></button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

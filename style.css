@@ -1,0 +1,152 @@
+/* Import Modern Font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400&display=swap');
+
+/* General Page Styling */
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #000000; /* Inverted: Black background */
+    color: #FFFFFF; /* Inverted: White text */
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+/* Site Logo - "the rogue orchestra" */
+.site-logo {
+    font-size: 24px;
+    font-weight: 300; /* Thinner font */
+    text-align: left;
+    padding: 20px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+/* Header Container */
+.header-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px; /* Increased spacing beneath title */
+}
+
+/* Album GIF */
+.album-art {
+    width: 100%;
+    max-width: 600px; /* Make it wider */
+    display: block;
+    border-radius: 16px;
+    box-shadow: 0px 8px 24px rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
+    margin-bottom: 20px; /* Reduced space between GIF and description */
+}
+
+/* Content Container */
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* Description Section */
+.description-section {
+    background: rgba(255, 255, 255, 0.08); /* Translucent box */
+    padding: 20px;
+    border-radius: 12px;
+    text-align: left;
+    box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Ensuring Full Description is Displayed */
+.description-section p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #FFFFFF;
+}
+
+/* Italic Line for Experience */
+.description-section p:last-of-type {
+    font-style: italic;
+    color: #CCCCCC;
+}
+
+/* Tracklist Section */
+.tracklist-section {
+    margin-top: 30px;
+}
+
+/* Tracklist Title */
+.tracklist-title {
+    font-size: 20px;
+    font-weight: 300; /* Thinner font */
+    color: #FFFFFF;
+    margin-bottom: 15px;
+    text-transform: lowercase;
+}
+
+/* 🎵 Track List - Removing Bullets */
+.tracklist ul {
+    list-style: none; /* Fully removes bullets */
+    padding: 0;
+    margin: 0;
+}
+
+/* 🎵 Track Buttons - Translucent Look */
+.tracklist li {
+    background: rgba(255, 255, 255, 0.1); /* Liquidy, translucent */
+    color: white;
+    font-size: 16px;
+    font-weight: 300; /* Thinner text */
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 10px;
+    text-align: left; /* Align text to left */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.2); /* Glow effect */
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+/* Track Numbers Aligned Left */
+.tracklist li::before {
+    content: attr(data-number) ". ";
+    font-weight: 300;
+    color: white; /* Match text color */
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/* Hover Effect */
+.tracklist li:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Make Whole Button Clickable */
+.tracklist a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    box-sizing: border-box;
+    color: white;
+    text-decoration: none;
+}
+
+/* Mobile-Friendly Styles */
+@media (max-width: 600px) {
+    .tracklist li {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .description-section p {
+        font-size: 14px;
+    }
+
+    .album-art {
+        max-width: 90%;
+    }
+}
