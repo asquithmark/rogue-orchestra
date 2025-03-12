@@ -69,7 +69,6 @@ body {
     justify-content: center;
 }
 
-/* 🔊 Seek Bar */
 .seek-bar {
     width: 100%;
     -webkit-appearance: none;
@@ -87,4 +86,39 @@ body {
     background: white;
     border-radius: 50%;
     cursor: pointer;
+}
+
+/* 🎵 Song Navigation Buttons */
+.song-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Ensure buttons align correctly */
+.nav-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+/* Hover Effect */
+.nav-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* If only "Next" button exists (first song), force align to the right */
+.song-navigation button:only-child {
+    margin-left: auto;
+}
+
+/* If only "Previous" button exists (last song), force align to the left */
+.song-navigation button:first-child:only-child {
+    margin-right: auto;
+    margin-left: 0;
 }

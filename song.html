@@ -13,15 +13,22 @@
         <a href="index.html" class="back-link">← back to album</a>
         <img src="assets/album.gif" alt="Album GIF" class="album-art">
         <h2 id="songTitle" class="song-title"></h2>
-        <p id="songDescription" class="song-description"></p> <!-- 🎵 New Description Element -->
+        <p id="songDescription" class="song-description"></p>
 
-        <!-- 🎵 Updated Spotify-style Player -->
+        <!-- 🎵 Spotify-style Player -->
         <div class="audio-player">
             <button id="playPauseBtn" class="play-pause"><i class="fa-solid fa-play"></i></button>
             <input type="range" id="seekBar" class="seek-bar" value="0">
             <audio id="audioPlayer"></audio>
         </div>
+
+        <!-- 🎵 Next/Previous Buttons -->
+        <div class="song-navigation">
+            <button id="prevSong" class="nav-button">← Previous</button>
+            <button id="nextSong" class="nav-button">Next →</button>
+        </div>
     </div>
+
     <script src="script-song.js"></script>
 </body>
 </html>
