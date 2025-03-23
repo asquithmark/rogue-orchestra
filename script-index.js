@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             trackListContainer.innerHTML = "";
-            data.slice(0, 7).forEach((song, index) => {
+            data.forEach((song, index) => {
                 const trackButton = document.createElement("button");
                 trackButton.classList.add("track-button");
                 trackButton.innerHTML = `<span class="track-title">${song.title}</span>`;
