@@ -5,6 +5,21 @@
         "description": "The moment before waking. A dream slipping away, replaced by something new."
     },
     {
+        "title": "thaw.",
+        "src": "assets/thaw.mp3",
+        "description": "Frozen for so long. The first cracks. Something new emerging."
+    },
+    {
+        "title": "la ultima quedada del verano.",
+        "src": "assets/la-ultima-quedada-del-verano.mp3",
+        "description": "The last night of summer. Warm air, distant voices, fading light."
+    },
+    {
+        "title": "childhood's end.",
+        "src": "assets/childhoods-end.mp3",
+        "description": "A song of growing up, looking back, and knowing you can never return."
+    },
+    {
         "title": "the pit goes rogue.",
         "src": "assets/the-pit-goes-rogue.mp3",
         "description": "One musician breaks free, then another, then another. The orchestra rebels."
@@ -15,23 +30,8 @@
         "description": "The sound of a room with no one watching. Play like no one's there."
     },
     {
-        "title": "la ultima quedada del verano.",
-        "src": "assets/la-ultima-quedada-del-verano.mp3",
-        "description": "The last night of summer. Warm air, distant voices, fading light."
-    },
-    {
         "title": "hurry, or we'll miss the train.",
         "src": "assets/hurry-or-well-miss-the-train.mp3",
         "description": "No looking back. The journey is already moving forward."
-    },
-    {
-        "title": "childhood's end.",
-        "src": "assets/childhoods-end.mp3",
-        "description": "A song of growing up, looking back, and knowing you can never return."
-    },
-    {
-        "title": "thaw.",
-        "src": "assets/thaw.mp3",
-        "description": "Frozen for so long. The first cracks. Something new emerging."
     }
 ]

@@ -6,26 +6,34 @@
     <title>Song</title>
     <link rel="stylesheet" href="song-style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
+    <!-- Media Session API Metadata -->
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
     <div class="container">
         <h1 class="title">the rogue orchestra</h1>
         <a href="index.html" class="back-link">← back to album</a>
-        <img src="assets/album.gif" alt="Album GIF" class="album-art">
+        <img src="assets/album.gif" alt="Album GIF" class="album-art" id="albumArt">
         <h2 id="songTitle" class="song-title"></h2>
         <p id="songDescription" class="song-description"></p>
 
-        <!-- 🎵 Spotify-style Player -->
+        <!-- 🎵 Futuristic Player -->
         <div class="audio-player">
-            <button id="playPauseBtn" class="play-pause"><i class="fa-solid fa-play"></i></button>
-            <input type="range" id="seekBar" class="seek-bar" value="0">
+            <div class="player-controls">
+                <button id="shuffleBtn" class="control-button"><i class="fa-solid fa-shuffle"></i></button>
+                <button id="prevSong" class="control-button"><i class="fa-solid fa-backward-step"></i></button>
+                <button id="playPauseBtn" class="play-pause"><i class="fa-solid fa-play"></i></button>
+                <button id="nextSong" class="control-button"><i class="fa-solid fa-forward-step"></i></button>
+                <button id="repeatBtn" class="control-button"><i class="fa-solid fa-repeat"></i></button>
+            </div>
+            <div class="seek-container">
+                <span id="currentTime" class="time">0:00</span>
+                <input type="range" id="seekBar" class="seek-bar" value="0">
+                <span id="duration" class="time">0:00</span>
+            </div>
             <audio id="audioPlayer"></audio>
-        </div>
-
-        <!-- 🎵 Next/Previous Buttons -->
-        <div class="song-navigation">
-            <button id="prevSong" class="nav-button">← Previous</button>
-            <button id="nextSong" class="nav-button">Next →</button>
         </div>
     </div>
 

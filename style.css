@@ -1,12 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
 
 body {
-    background-color: black;
+    background: linear-gradient(180deg, #121212 0%, #000000 100%);
     color: white;
     font-family: 'Inter', sans-serif;
     text-align: center;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
 
 .container {
@@ -16,51 +17,100 @@ body {
 }
 
 .title {
-    font-size: 24px;
-    font-weight: 300;
+    font-size: 28px;
+    font-weight: 200;
     text-align: left;
     padding-left: 10px;
+    margin-bottom: 20px;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+    position: relative;
 }
 
 .tracklist-title {
-    font-size: 24px;
-    font-weight: 300;
-    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    text-align: left;
+    color: #FFFFFF;
+    margin: 30px 0 20px 10px;
 }
 
 .album-art {
     width: 100%;
     max-width: 450px;
-    border-radius: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
 }
 
 .description {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.07);
+    padding: 20px;
+    border-radius: 12px;
     text-align: left;
+    color: #B3B3B3;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.description em {
+    color: #FFFFFF;
 }
 
 .tracklist-container {
     margin-top: 20px;
+    counter-reset: track-number;
+    padding: 0 10px;
 }
 
 .track-button {
-    display: block;
+    display: flex;
     width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    font-size: 18px;
+    padding: 12px 15px;
+    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #B3B3B3;
+    font-size: 16px;
     text-align: left;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    align-items: center;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .track-button:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.track-button:before {
+    content: counter(track-number);
+    counter-increment: track-number;
+    margin-right: 20px;
+    font-size: 16px;
+    color: #B3B3B3;
+    min-width: 20px;
+    text-align: right;
+}
+
+.track-title {
+    flex-grow: 1;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

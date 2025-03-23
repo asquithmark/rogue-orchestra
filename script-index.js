@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
             data.slice(0, 7).forEach((song, index) => {
                 const trackButton = document.createElement("button");
                 trackButton.classList.add("track-button");
-                trackButton.innerHTML = `${index + 1}. ${song.title}`;
+                trackButton.innerHTML = `<span class="track-title">${song.title}</span>`;
                 trackButton.onclick = function () {
                     window.location.href = `song.html?song=${index}`;
                 };
