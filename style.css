@@ -14,17 +14,25 @@ body {
     max-width: 450px;
     margin: auto;
     padding: 20px;
+    position: relative;
+}
+
+.title-container {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    right: 40px;
+    z-index: 2;
 }
 
 .title {
     font-size: 28px;
     font-weight: 200;
     text-align: left;
-    padding-left: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #FFFFFF;
     letter-spacing: -0.5px;
-    position: relative;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .tracklist-title {
@@ -38,6 +46,8 @@ body {
 .album-art {
     width: 100%;
     max-width: 450px;
+    margin-bottom: 20px;
+    display: block;
     border-radius: 8px;
     box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
 }
