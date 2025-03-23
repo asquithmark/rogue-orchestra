@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isShuffleOn = false;
     let isRepeatOn = false;
     let songs = [];
+    let currentSongIndex = 0;
 
     const params = new URLSearchParams(window.location.search);
     let songIndex = parseInt(params.get("song")) || 0;
@@ -31,18 +32,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 artist: 'The Rogue Orchestra',
                 album: 'The Rogue Orchestra',
                 artwork: [
-                    { src: albumArt.src, sizes: '450x450', type: 'image/gif' }
+                    { src: 'rogue-orchestra-icon.png', sizes: '512x512', type: 'image/png' }
                 ]
             });
 
-            navigator.mediaSession.setActionHandler('play', () => audioPlayer.play());
-            navigator.mediaSession.setActionHandler('pause', () => audioPlayer.pause());
-            navigator.mediaSession.setActionHandler('previoustrack', () => navigateToSong(songIndex - 1));
-            navigator.mediaSession.setActionHandler('nexttrack', () => navigateToSong(songIndex + 1));
-            navigator.mediaSession.setActionHandler('seekto', (details) => {
-                audioPlayer.currentTime = details.seekTime;
+            navigator.mediaSession.setActionHandler('play', () => {
+                audioPlayer.play();
+                updatePlayPauseButton();
+            });
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                audioPlayer.pause();
+                updatePlayPauseButton();
+            });
+
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                playPreviousSong();
+            });
+
+            navigator.mediaSession.setActionHandler('nexttrack', () => {
+                playNextSong();
             });
         }
+    }
+
+    function loadAndPlaySong(song) {
+        audioPlayer.src = song.src;
+        songTitle.textContent = song.title;
+        songDescription.textContent = song.description;
+        updateMediaSessionMetadata(song);
+        
+        // Autoplay the song
+        audioPlayer.play().catch(error => {
+            console.log('Autoplay prevented:', error);
+        });
+        
+        updatePlayPauseButton();
     }
 
     fetch("songs.json")
@@ -50,26 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             songs = data;
             if (songs[songIndex]) {
-                const song = songs[songIndex];
-                songTitle.textContent = song.title;
-                songDescription.textContent = song.description;
-                audioPlayer.src = song.src;
-                audioPlayer.load();
-
-                // Set up media session metadata
-                updateMediaSessionMetadata(song);
-
-                // Auto-play song
-                audioPlayer.play().then(() => {
-                    playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-                }).catch(error => {
-                    console.log("Auto-play prevented:", error);
-                    playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-                });
-
-                // Update button states
-                prevSongBtn.disabled = songIndex <= 0;
-                nextSongBtn.disabled = songIndex >= songs.length - 1;
+                currentSongIndex = songIndex;
+                loadAndPlaySong(songs[currentSongIndex]);
+                updateNavigationButtons();
             }
         })
         .catch(error => console.error("Error loading songs.json:", error));
@@ -106,8 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isRepeatOn) {
             audioPlayer.currentTime = 0;
             audioPlayer.play();
-        } else if (songIndex < songs.length - 1) {
-            navigateToSong(songIndex + 1);
+        } else {
+            playNextSong();
         }
     });
 
@@ -118,19 +126,51 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     prevSongBtn.addEventListener("click", () => {
-        if (songIndex > 0) navigateToSong(songIndex - 1);
+        if (currentSongIndex > 0) {
+            currentSongIndex--;
+            loadAndPlaySong(songs[currentSongIndex]);
+            updateNavigationButtons();
+        }
     });
 
     nextSongBtn.addEventListener("click", () => {
-        if (songIndex < songs.length - 1) navigateToSong(songIndex + 1);
+        if (currentSongIndex < songs.length - 1) {
+            currentSongIndex++;
+            loadAndPlaySong(songs[currentSongIndex]);
+            updateNavigationButtons();
+        }
     });
 
-    function navigateToSong(newIndex) {
-        if (isShuffleOn) {
-            newIndex = Math.floor(Math.random() * songs.length);
+    function playNextSong() {
+        if (currentSongIndex < songs.length - 1) {
+            currentSongIndex++;
+        } else if (isShuffleOn) {
+            currentSongIndex = Math.floor(Math.random() * songs.length);
+        } else {
+            currentSongIndex = 0;
         }
-        if (newIndex >= 0 && newIndex < songs.length) {
-            window.location.href = `song.html?song=${newIndex}`;
+        loadAndPlaySong(songs[currentSongIndex]);
+        updateNavigationButtons();
+    }
+
+    function playPreviousSong() {
+        if (currentSongIndex > 0) {
+            currentSongIndex--;
+            loadAndPlaySong(songs[currentSongIndex]);
+            updateNavigationButtons();
         }
+    }
+
+    function updatePlayPauseButton() {
+        if (audioPlayer.paused) {
+            playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        } else {
+            playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        }
+    }
+
+    function updateNavigationButtons() {
+        prevSongBtn.disabled = currentSongIndex <= 0;
+        nextSongBtn.disabled = currentSongIndex >= songs.length - 1;
     }
 });
