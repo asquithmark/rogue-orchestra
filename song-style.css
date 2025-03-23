@@ -64,6 +64,7 @@ body {
     font-weight: 600;
     margin: 25px 0 10px;
     color: #FFFFFF;
+    text-align: center;
 }
 
 .song-description {
@@ -71,6 +72,12 @@ body {
     color: #B3B3B3;
     margin: 0 0 25px;
     line-height: 1.6;
+    text-align: left;
+}
+
+.song-description em {
+    display: block;
+    text-align: center;
 }
 
 /* 🎵 Futuristic Player */

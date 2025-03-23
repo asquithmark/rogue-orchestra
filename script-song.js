@@ -57,9 +57,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function loadAndPlaySong(song) {
-        audioPlayer.src = song.src;
+        audioPlayer.src = `assets/${song.audioFile}`;
         songTitle.textContent = song.title;
-        songDescription.textContent = song.description;
+        songDescription.innerHTML = song.description;
         updateMediaSessionMetadata(song);
         
         // Autoplay the song
