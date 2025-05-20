@@ -95,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
     shuffleBtn.addEventListener("click", function() {
         isShuffleOn = !isShuffleOn;
         shuffleBtn.classList.toggle("active", isShuffleOn);
+        updateNavigationButtons();
     });
 
     repeatBtn.addEventListener("click", function() {
@@ -126,26 +127,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     prevSongBtn.addEventListener("click", () => {
-        if (currentSongIndex > 0) {
-            currentSongIndex--;
-            loadAndPlaySong(songs[currentSongIndex]);
-            updateNavigationButtons();
-        }
+        playPreviousSong();
     });
 
     nextSongBtn.addEventListener("click", () => {
-        if (currentSongIndex < songs.length - 1) {
-            currentSongIndex++;
-            loadAndPlaySong(songs[currentSongIndex]);
-            updateNavigationButtons();
-        }
+        playNextSong();
     });
 
     function playNextSong() {
-        if (currentSongIndex < songs.length - 1) {
+        if (isShuffleOn) {
+            let nextIndex = Math.floor(Math.random() * songs.length);
+            if (songs.length > 1) {
+                while (nextIndex === currentSongIndex) {
+                    nextIndex = Math.floor(Math.random() * songs.length);
+                }
+            }
+            currentSongIndex = nextIndex;
+        } else if (currentSongIndex < songs.length - 1) {
             currentSongIndex++;
-        } else if (isShuffleOn) {
-            currentSongIndex = Math.floor(Math.random() * songs.length);
         } else {
             currentSongIndex = 0;
         }
@@ -171,6 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateNavigationButtons() {
         prevSongBtn.disabled = currentSongIndex <= 0;
-        nextSongBtn.disabled = currentSongIndex >= songs.length - 1;
+        nextSongBtn.disabled = !isShuffleOn && currentSongIndex >= songs.length - 1;
     }
 });
