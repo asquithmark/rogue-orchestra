@@ -1,9 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add('loaded');
     const audioPlayer = document.getElementById("audioPlayer");
     const playPauseBtn = document.getElementById("playPauseBtn");
     const seekBar = document.getElementById("seekBar");
+    const volumeSlider = document.getElementById("volumeSlider");
     const songTitle = document.getElementById("songTitle");
     const songDescription = document.getElementById("songDescription");
+    const toggleDescription = document.getElementById("toggleDescription");
+    const backLink = document.getElementById("backLink");
     const prevSongBtn = document.getElementById("prevSong");
     const nextSongBtn = document.getElementById("nextSong");
     const shuffleBtn = document.getElementById("shuffleBtn");
@@ -32,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 artist: 'The Rogue Orchestra',
                 album: 'The Rogue Orchestra',
                 artwork: [
-                    { src: 'rogue-orchestra-icon.png', sizes: '512x512', type: 'image/png' }
+                    { src: 'assets/album.gif', sizes: '512x512', type: 'image/gif' }
                 ]
             });
 
@@ -60,6 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
         audioPlayer.src = `assets/${song.audioFile}`;
         songTitle.textContent = song.title;
         songDescription.innerHTML = song.description;
+        songDescription.classList.add('collapsed');
+        toggleDescription.textContent = 'show more';
         updateMediaSessionMetadata(song);
         
         // Attempt to autoplay; may be prevented by the browser
@@ -81,6 +87,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(error => console.error("Error loading songs.json:", error));
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        seekBar.style.background = 'linear-gradient(to right, #1DB954 0%, rgba(255,255,255,0.1) 0%)';
+    });
+
+    toggleDescription.addEventListener('click', () => {
+        songDescription.classList.toggle('collapsed');
+        toggleDescription.textContent = songDescription.classList.contains('collapsed') ? 'show more' : 'show less';
+    });
+
+    backLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigate('index.html');
+    });
 
     playPauseBtn.addEventListener("click", function () {
         if (audioPlayer.paused) {
@@ -108,6 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
             seekBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
             currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
             durationEl.textContent = formatTime(audioPlayer.duration);
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            seekBar.style.background = `linear-gradient(to right, #1DB954 0%, #1DB954 ${percent}%, rgba(255,255,255,0.1) ${percent}%)`;
         }
     });
 
@@ -124,7 +146,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const time = (seekBar.value / 100) * audioPlayer.duration;
         audioPlayer.currentTime = time;
         currentTimeEl.textContent = formatTime(time);
+        const percent = seekBar.value;
+        seekBar.style.background = `linear-gradient(to right, #1DB954 0%, #1DB954 ${percent}%, rgba(255,255,255,0.1) ${percent}%)`;
     });
+
+    volumeSlider.addEventListener('input', () => {
+        audioPlayer.volume = volumeSlider.value;
+    });
+
+    audioPlayer.volume = volumeSlider.value;
 
     prevSongBtn.addEventListener("click", () => {
         playPreviousSong();
@@ -171,5 +201,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateNavigationButtons() {
         prevSongBtn.disabled = currentSongIndex <= 0;
         nextSongBtn.disabled = !isShuffleOn && currentSongIndex >= songs.length - 1;
+    }
+
+    function navigate(url) {
+        document.body.classList.remove('loaded');
+        setTimeout(() => {
+            window.location.href = url;
+        }, 300);
     }
 });

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add('loaded');
     const trackListContainer = document.getElementById("trackList");
 
     fetch("songs.json")
@@ -10,10 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 trackButton.classList.add("track-button");
                 trackButton.innerHTML = `<span class="track-title">${song.title}</span>`;
                 trackButton.onclick = function () {
-                    window.location.href = `song.html?song=${index}`;
+                    navigate(`song.html?song=${index}`);
                 };
                 trackListContainer.appendChild(trackButton);
             });
         })
         .catch(error => console.error("Error loading songs:", error));
 });
+
+function navigate(url) {
+    document.body.classList.remove('loaded');
+    setTimeout(() => {
+        window.location.href = url;
+    }, 300);
+}
