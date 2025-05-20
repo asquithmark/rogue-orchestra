@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         songDescription.innerHTML = song.description;
         updateMediaSessionMetadata(song);
         
-        // Autoplay the song
+        // Attempt to autoplay; may be prevented by the browser
         audioPlayer.play().catch(error => {
             console.log('Autoplay prevented:', error);
         });
