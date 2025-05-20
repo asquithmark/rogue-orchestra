@@ -15,11 +15,12 @@
     <div class="container">
         <div class="title-container">
             <h1 class="title">the rogue orchestra</h1>
-            <a href="index.html" class="back-link">← back to album</a>
+            <a href="#" id="backLink" class="back-link">← back to album</a>
         </div>
         <img src="assets/album.gif" alt="Album GIF" class="album-art" id="albumArt">
         <h2 id="songTitle" class="song-title"></h2>
         <p id="songDescription" class="song-description"></p>
+        <span id="toggleDescription" class="toggle-description">show more</span>
 
         <!-- 🎵 Futuristic Player -->
         <div class="audio-player">
@@ -34,6 +35,10 @@
                 <span id="currentTime" class="time">0:00</span>
                 <input type="range" id="seekBar" class="seek-bar" value="0">
                 <span id="duration" class="time">0:00</span>
+            </div>
+            <div class="volume-container">
+                <i class="fa-solid fa-volume-high"></i>
+                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
             </div>
             <audio id="audioPlayer"></audio>
         </div>
