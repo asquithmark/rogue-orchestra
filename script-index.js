@@ -10,9 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 const trackButton = document.createElement("button");
                 trackButton.classList.add("track-button");
                 trackButton.innerHTML = `<span class="track-title">${song.title}</span>`;
-                trackButton.onclick = function () {
-                    navigate(`song.html?song=${index}`);
-                };
+                // Store the destination URL on the button itself or create an <a> tag
+                // For simplicity with current structure, we'll build URL directly
+                const destinationUrl = `song.html?song=${index}`;
+                trackButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    navigate(destinationUrl);
+                });
                 trackListContainer.appendChild(trackButton);
             });
         })
@@ -23,5 +27,5 @@ function navigate(url) {
     document.body.classList.remove('loaded');
     setTimeout(() => {
         window.location.href = url;
-    }, 300);
+    }, 300); // Ensure this matches CSS transition duration
 }

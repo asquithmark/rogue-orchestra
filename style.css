@@ -1,15 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
 
+:root {
+  --font-family-primary: 'Inter', sans-serif;
+
+  --color-background-start: #202020;
+  --color-background-end: #101010;
+  --color-text-primary: #E0E0E0; /* Slightly off-white for better readability */
+  --color-text-secondary: #A0A0A0; /* For less prominent text */
+  --color-accent: #1DB954; /* Existing green accent */
+  --color-accent-hover: #1ED760; /* Brighter green for hover */
+
+  --color-surface-bg: rgba(35, 35, 35, 0.7); /* Darker, more subtle translucency */
+  --color-surface-border: rgba(255, 255, 255, 0.1);
+  --color-surface-hover-bg: rgba(45, 45, 45, 0.8);
+  --color-surface-hover-border: rgba(255, 255, 255, 0.2);
+
+  --border-radius-small: 8px;
+  --border-radius-medium: 12px;
+  --border-radius-large: 20px;
+
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-heavy: 0 12px 40px rgba(0,0,0,0.4); /* For elements like the main container */
+
+  --backdrop-blur-amount: 10px; /* Reduced blur for a possibly crisper look */
+}
+
 body {
-    background: linear-gradient(180deg, #121212 0%, #000000 100%);
-    color: white;
-    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, var(--color-background-start) 0%, var(--color-background-end) 100%);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary);
     text-align: center;
     margin: 0;
     padding: 0;
     min-height: 100vh;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease-in-out;
 }
 
 body.loaded {
@@ -19,13 +45,13 @@ body.loaded {
 .container {
     max-width: 450px;
     margin: 60px auto;
-    padding: 40px 20px 80px;
+    padding: 50px 25px 80px;
     position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    background: var(--color-surface-bg);
+    border-radius: var(--border-radius-large);
+    backdrop-filter: blur(var(--backdrop-blur-amount));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
+    box-shadow: var(--shadow-heavy);
 }
 
 .title-container {
@@ -40,81 +66,102 @@ body.loaded {
     font-size: 28px;
     font-weight: 200;
     text-align: left;
-    margin-bottom: 10px;
-    color: #FFFFFF;
+    margin-bottom: 15px;
+    color: var(--color-text-primary);
     letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: var(--shadow-light);
 }
 
 .tracklist-title {
     font-size: 22px;
-    font-weight: 500;
+    font-weight: 500; /* Assuming this is intentionally heavier */
     text-align: left;
-    color: #FFFFFF;
-    margin: 30px 0 20px 10px;
+    color: var(--color-text-primary);
+    margin: 50px 0 20px 0;
 }
 
 .album-art {
     width: 100%;
     max-width: 450px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     display: block;
-    border-radius: 8px;
-    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+    border-radius: var(--border-radius-small);
+    box-shadow: var(--shadow-medium); /* Default shadow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.album-art:hover {
+    transform: scale(1.02); /* Subtle zoom */
+    box-shadow: var(--shadow-heavy); /* More prominent shadow on hover */
 }
 
 .description {
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 300; /* Lighter for body text */
     line-height: 1.6;
-    background: rgba(255, 255, 255, 0.07);
-    padding: 20px;
-    border-radius: 12px;
+    background: var(--color-surface-bg);
+    padding: 25px;
+    border-radius: var(--border-radius-medium);
     text-align: left;
-    color: #B3B3B3;
-    margin: 20px 0;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    color: var(--color-text-secondary);
+    margin: 30px 0;
+    backdrop-filter: blur(var(--backdrop-blur-amount));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
+    border: 1px solid var(--color-surface-border);
+    box-shadow: var(--shadow-light);
 }
 
 .description em {
-    color: #FFFFFF;
+    color: var(--color-text-primary);
 }
 
 .tracklist-container {
     margin-top: 20px;
     counter-reset: track-number;
-    padding: 0 10px;
-    margin-bottom: 60px;
+    padding: 0;
+    margin-bottom: 40px;
 }
 
 .track-button {
     display: flex;
     width: 100%;
-    padding: 12px 15px;
-    margin: 4px 0;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #B3B3B3;
+    padding: 15px 20px;
+    margin: 8px 0;
+    background: var(--color-surface-bg);
+    border: 1px solid var(--color-surface-border);
+    color: var(--color-text-secondary);
     font-size: 16px;
+    font-weight: 400; /* Regular weight for track titles */
     text-align: left;
     cursor: pointer;
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: var(--border-radius-medium);
+    transition: transform 0.3s ease-in-out, 
+                box-shadow 0.3s ease-in-out, 
+                background-color 0.3s ease-in-out, 
+                border-color 0.3s ease-in-out,
+                color 0.3s ease-in-out; /* Added color for completeness */
+    box-shadow: var(--shadow-light);
     align-items: center;
     box-sizing: border-box;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--backdrop-blur-amount));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
 }
 
 .track-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
+    background: var(--color-surface-hover-bg);
+    color: var(--color-text-primary);
     transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--color-surface-hover-border);
+}
+
+.track-button:focus {
+    outline: none; /* Remove default outline if custom styling is sufficient */
+    background: var(--color-surface-hover-bg);
+    color: var(--color-text-primary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--color-surface-hover-border);
 }
 
 .track-button:before {
@@ -122,7 +169,7 @@ body.loaded {
     counter-increment: track-number;
     margin-right: 20px;
     font-size: 16px;
-    color: #B3B3B3;
+    color: var(--color-text-secondary);
     min-width: 20px;
     text-align: right;
 }
@@ -131,7 +178,7 @@ body.loaded {
     flex-grow: 1;
     text-align: left;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 400; /* Regular weight for track titles */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
