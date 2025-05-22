@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,301,701,300,501,401,901,400,2&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="song-style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
     <!-- Media Session API Metadata -->
@@ -13,6 +14,9 @@
 </head>
 <body>
     <div class="container">
+        <button id="themeSwitcherBtn" class="theme-switcher" aria-label="Toggle theme">
+            <i class="fas fa-sun"></i> <!-- Icon for light mode, will change to moon -->
+        </button>
         <div class="title-container">
             <h1 class="title">the rogue orchestra</h1>
             <a href="#" id="backLink" class="back-link">← back to album</a>
@@ -45,5 +49,6 @@
     </div>
 
     <script src="script-song.js"></script>
+    <script src="theme-switcher.js" defer></script>
 </body>
 </html>

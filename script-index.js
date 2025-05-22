@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add('loaded');
     const trackListContainer = document.getElementById("trackList");
+    const introPopup = document.getElementById("introPopup");
+    const continueToSongBtn = document.getElementById("continueToSongBtn");
+    let pendingSongUrl = ''; // Variable to store the song URL
 
     fetch("songs.json")
         .then(response => response.json())
@@ -15,12 +18,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 const destinationUrl = `song.html?song=${index}`;
                 trackButton.addEventListener('click', function(event) {
                     event.preventDefault();
-                    navigate(destinationUrl);
+                    pendingSongUrl = destinationUrl; // Store the URL
+                    introPopup.style.display = 'flex';
+                    setTimeout(() => introPopup.classList.add('visible'), 10); // Trigger fade-in
                 });
                 trackListContainer.appendChild(trackButton);
             });
         })
         .catch(error => console.error("Error loading songs:", error));
+
+    continueToSongBtn.addEventListener('click', function() {
+        if (pendingSongUrl) {
+            introPopup.classList.remove('visible');
+            setTimeout(() => {
+                introPopup.style.display = 'none';
+                navigate(pendingSongUrl); // Navigate to the stored URL
+            }, 300); // Match CSS transition
+        }
+    });
+
+    // Optional: Close popup if clicking outside
+    introPopup.addEventListener('click', function(event) {
+        if (event.target === introPopup) {
+            introPopup.classList.remove('visible');
+            setTimeout(() => {
+                introPopup.style.display = 'none';
+                pendingSongUrl = ''; // Clear pending URL if popup is dismissed
+            }, 300);
+        }
+    });
 });
 
 function navigate(url) {

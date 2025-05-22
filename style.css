@@ -1,33 +1,94 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
 
 :root {
-  --font-family-primary: 'Inter', sans-serif;
+  --font-family-primary: 'Satoshi', sans-serif;
 
-  --color-background-start: #202020;
-  --color-background-end: #101010;
-  --color-text-primary: #E0E0E0; /* Slightly off-white for better readability */
-  --color-text-secondary: #A0A0A0; /* For less prominent text */
-  --color-accent: #1DB954; /* Existing green accent */
-  --color-accent-hover: #1ED760; /* Brighter green for hover */
-
-  --color-surface-bg: rgba(35, 35, 35, 0.7); /* Darker, more subtle translucency */
-  --color-surface-border: rgba(255, 255, 255, 0.1);
-  --color-surface-hover-bg: rgba(45, 45, 45, 0.8);
-  --color-surface-hover-border: rgba(255, 255, 255, 0.2);
-
+  /* Light/Dark Agnostic Variables (Keep these if they don't change by theme) */
   --border-radius-small: 8px;
   --border-radius-medium: 12px;
   --border-radius-large: 20px;
+  --backdrop-blur-amount: 10px;
 
-  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.2);
-  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-heavy: 0 12px 40px rgba(0,0,0,0.4); /* For elements like the main container */
+  /* Dark Theme Variables (Defaults) */
+  --color-page-background-dark: #000000;
+  --color-text-primary-dark: #E0E0E0;
+  --color-text-secondary-dark: #A0A0A0;
+  --color-glass-bg-dark: rgba(255, 255, 255, 0.08);
+  --color-glass-border-dark: rgba(255, 255, 255, 0.15);
+  --color-glass-hover-bg-dark: rgba(255, 255, 255, 0.12);
+  --color-glass-hover-border-dark: rgba(255, 255, 255, 0.25);
+  --color-interactive-strong-dark: #FFFFFF;
+  --shadow-light-dark: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --shadow-medium-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-heavy-dark: 0 12px 40px rgba(0,0,0,0.4);
+  --play-pause-bg-dark: var(--color-text-primary-dark);
+  --play-pause-icon-dark: var(--color-page-background-dark);
+  --play-pause-hover-bg-dark: var(--color-interactive-strong-dark);
+  --play-pause-hover-icon-dark: var(--color-page-background-dark);
 
-  --backdrop-blur-amount: 10px; /* Reduced blur for a possibly crisper look */
+  /* Light Theme Variables */
+  --color-page-background-light: #F0F0F0;
+  --color-text-primary-light: #121212;
+  --color-text-secondary-light: #505050;
+  --color-glass-bg-light: rgba(0, 0, 0, 0.03); /* Darker glass on light bg */
+  --color-glass-border-light: rgba(0, 0, 0, 0.1);
+  --color-glass-hover-bg-light: rgba(0, 0, 0, 0.06);
+  --color-glass-hover-border-light: rgba(0, 0, 0, 0.15);
+  --color-interactive-strong-light: #000000;
+  --shadow-light-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --shadow-medium-light: 0 8px 25px rgba(0, 0, 0, 0.12);
+  --shadow-heavy-light: 0 10px 30px rgba(0,0,0,0.15);
+  --play-pause-bg-light: var(--color-text-primary-light);
+  --play-pause-icon-light: var(--color-page-background-light);
+  --play-pause-hover-bg-light: var(--color-interactive-strong-light);
+  --play-pause-hover-icon-light: var(--color-page-background-light);
+
+  /* Mapped Variables (Defaults to Dark Theme) */
+  --color-page-background: var(--color-page-background-dark);
+  --color-background-start: var(--color-page-background); /* Kept for existing gradient usage, now solid */
+  --color-background-end: var(--color-page-background);   /* Kept for existing gradient usage, now solid */
+  --color-text-primary: var(--color-text-primary-dark);
+  --color-text-secondary: var(--color-text-secondary-dark);
+  --color-accent: var(--color-text-primary); /* Accent is primary text color */
+  --color-accent-hover: var(--color-interactive-strong-dark); /* Hover is strong interactive color */
+  --color-interactive-strong: var(--color-interactive-strong-dark);
+  --color-glass-bg: var(--color-glass-bg-dark);
+  --color-glass-border: var(--color-glass-border-dark);
+  --color-surface-bg: var(--color-glass-bg); /* Legacy map */
+  --color-surface-border: var(--color-glass-border); /* Legacy map */
+  --color-surface-hover-bg: var(--color-glass-hover-bg-dark);
+  --color-surface-hover-border: var(--color-glass-hover-border-dark);
+  --shadow-light: var(--shadow-light-dark);
+  --shadow-medium: var(--shadow-medium-dark);
+  --shadow-heavy: var(--shadow-heavy-dark);
+  --play-pause-bg: var(--play-pause-bg-dark);
+  --play-pause-icon: var(--play-pause-icon-dark);
+  --play-pause-hover-bg: var(--play-pause-hover-bg-dark);
+  --play-pause-hover-icon: var(--play-pause-hover-icon-dark);
+}
+
+body.light-mode {
+  --color-page-background: var(--color-page-background-light);
+  --color-text-primary: var(--color-text-primary-light);
+  --color-text-secondary: var(--color-text-secondary-light);
+  --color-accent: var(--color-text-primary); /* Accent is primary text color */
+  --color-accent-hover: var(--color-interactive-strong-light); /* Hover is strong interactive color */
+  --color-interactive-strong: var(--color-interactive-strong-light);
+  --color-glass-bg: var(--color-glass-bg-light);
+  --color-glass-border: var(--color-glass-border-light);
+  --color-surface-hover-bg: var(--color-glass-hover-bg-light);
+  --color-surface-hover-border: var(--color-glass-hover-border-light);
+  --shadow-light: var(--shadow-light-light);
+  --shadow-medium: var(--shadow-medium-light);
+  --shadow-heavy: var(--shadow-heavy-light);
+  --play-pause-bg: var(--play-pause-bg-light);
+  --play-pause-icon: var(--play-pause-icon-light);
+  --play-pause-hover-bg: var(--play-pause-hover-bg-light);
+  --play-pause-hover-icon: var(--play-pause-hover-icon-light);
 }
 
 body {
-    background: linear-gradient(180deg, var(--color-background-start) 0%, var(--color-background-end) 100%);
+    background: var(--color-page-background);
     color: var(--color-text-primary);
     font-family: var(--font-family-primary);
     text-align: center;
@@ -42,12 +103,21 @@ body.loaded {
     opacity: 1;
 }
 
+.index-page-background {
+    background-image: url('assets/album.gif');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed; /* Keeps the background fixed while content scrolls */
+    background-color: var(--color-page-background); /* Fallback black color */
+}
+
 .container {
     max-width: 450px;
-    margin: 60px auto;
+    margin: 20px auto 60px auto; /* Reduced top margin */
     padding: 50px 25px 80px;
     position: relative;
-    background: var(--color-surface-bg);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
     border-radius: var(--border-radius-large);
     backdrop-filter: blur(var(--backdrop-blur-amount));
     -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
@@ -99,7 +169,8 @@ body.loaded {
     font-size: 14px;
     font-weight: 300; /* Lighter for body text */
     line-height: 1.6;
-    background: var(--color-surface-bg);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
     padding: 25px;
     border-radius: var(--border-radius-medium);
     text-align: left;
@@ -107,7 +178,6 @@ body.loaded {
     margin: 30px 0;
     backdrop-filter: blur(var(--backdrop-blur-amount));
     -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
-    border: 1px solid var(--color-surface-border);
     box-shadow: var(--shadow-light);
 }
 
@@ -127,8 +197,8 @@ body.loaded {
     width: 100%;
     padding: 15px 20px;
     margin: 8px 0;
-    background: var(--color-surface-bg);
-    border: 1px solid var(--color-surface-border);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
     color: var(--color-text-secondary);
     font-size: 16px;
     font-weight: 400; /* Regular weight for track titles */
@@ -149,19 +219,19 @@ body.loaded {
 
 .track-button:hover {
     background: var(--color-surface-hover-bg);
+    border-color: var(--color-surface-hover-border);
     color: var(--color-text-primary);
     transform: translateY(-4px);
     box-shadow: var(--shadow-medium);
-    border-color: var(--color-surface-hover-border);
 }
 
 .track-button:focus {
     outline: none; /* Remove default outline if custom styling is sufficient */
     background: var(--color-surface-hover-bg);
+    border-color: var(--color-surface-hover-border);
     color: var(--color-text-primary);
     transform: translateY(-4px);
     box-shadow: var(--shadow-medium);
-    border-color: var(--color-surface-hover-border);
 }
 
 .track-button:before {
@@ -189,4 +259,93 @@ body.loaded {
     flex-direction: column;
     gap: 10px;
     margin-bottom: 40px;
+}
+
+/* Popup Overlay and Content Styles */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.popup-overlay.visible {
+    opacity: 1;
+}
+
+.popup-content.glass-popup {
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(var(--backdrop-blur-amount));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
+    box-shadow: var(--shadow-heavy);
+    border-radius: var(--border-radius-large);
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    color: var(--color-text-primary);
+}
+
+.popup-content p {
+    margin-bottom: 25px;
+    line-height: 1.7;
+    font-weight: 300; /* Consistent with other descriptions */
+}
+
+.popup-button {
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    color: var(--color-text-primary);
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 500; /* Make it feel a bit more prominent */
+    cursor: pointer;
+    border-radius: var(--border-radius-medium); /* Consistent radius */
+    transition: all 0.2s ease-in-out;
+    box-shadow: var(--shadow-light);
+}
+
+.popup-button:hover, .popup-button:focus {
+    background: var(--color-surface-hover-bg);
+    border-color: var(--color-surface-hover-border);
+    color: var(--color-interactive-strong);
+    box-shadow: var(--shadow-medium);
+    transform: scale(1.03);
+    outline: none;
+}
+
+/* Theme Switcher Button */
+.theme-switcher {
+    position: absolute;
+    top: 20px; /* Adjust as needed based on container padding */
+    right: 20px; /* Adjust as needed */
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    color: var(--color-text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-light);
+    z-index: 100; /* Ensure it's clickable */
+}
+.theme-switcher:hover, .theme-switcher:focus {
+    background: var(--color-surface-hover-bg);
+    border-color: var(--color-surface-hover-border);
+    color: var(--color-interactive-strong);
+    transform: scale(1.1);
+    outline: none;
 }
