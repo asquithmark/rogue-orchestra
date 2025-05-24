@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const audioPlayer = document.getElementById("audioPlayer");
     const playPauseBtn = document.getElementById("playPauseBtn");
     const seekBar = document.getElementById("seekBar");
-    const volumeSlider = document.getElementById("volumeSlider");
+    // const volumeSlider = document.getElementById("volumeSlider"); // Removed
     const songTitle = document.getElementById("songTitle");
     const songDescription = document.getElementById("songDescription");
     const toggleDescription = document.getElementById("toggleDescription");
@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 playNextSong();
             });
 
+            /*
             try {
                 navigator.mediaSession.setActionHandler('seekbackward', (details) => {
                     const skipTime = details.seekOffset || 10;
@@ -106,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     updateMediaSessionPositionState();
                 });
             } catch (error) { console.error('Failed to set seekforward handler', error); }
+            */
 
             try {
                 navigator.mediaSession.setActionHandler('seekto', (details) => {
@@ -231,11 +233,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    volumeSlider.addEventListener('input', () => {
-        audioPlayer.volume = volumeSlider.value;
-    });
+    // volumeSlider.addEventListener('input', () => { // Removed
+    //     audioPlayer.volume = volumeSlider.value;
+    // });
 
-    audioPlayer.volume = volumeSlider.value; // Initial volume set
+    // audioPlayer.volume = volumeSlider.value; // Initial volume set - Removed (browser default or hardware controls will manage)
+    // Default volume is 1.0 (max). Users will use hardware controls.
 
     prevSongBtn.addEventListener("click", () => {
         playPreviousSong();

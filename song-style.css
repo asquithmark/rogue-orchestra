@@ -250,33 +250,6 @@ body.loaded {
     gap: 12px;
 }
 
-.volume-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.volume-slider {
-    flex-grow: 1;
-    -webkit-appearance: none;
-    height: 6px; /* Could be a variable */
-    background: var(--color-surface-border); /* Subtle background */
-    border-radius: var(--border-radius-small); /* Consistent border radius */
-    outline: none;
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on some mobile browsers */
-    touch-action: manipulation; /* Optimize touch interaction */
-}
-
-.volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px; /* Could be a variable */
-    height: 14px; /* Could be a variable */
-    background: var(--color-text-primary); /* White thumb */
-    border-radius: 50%; /* Circular thumb */
-    cursor: pointer;
-}
-
 .time {
     font-size: 12px;
     color: var(--color-text-secondary);
