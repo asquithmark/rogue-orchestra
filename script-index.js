@@ -49,6 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Add this new pageshow listener
+window.addEventListener('pageshow', function(event) {
+    // event.persisted is true if the page was loaded from bfcache
+    // We want to ensure 'loaded' is present regardless of fresh load or bfcache restoration.
+    document.body.classList.add('loaded');
+});
+
 function navigate(url) {
     document.body.classList.remove('loaded');
     setTimeout(() => {

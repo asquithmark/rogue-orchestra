@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song</title>
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,301,701,300,501,401,901,400,2&display=swap" rel="stylesheet">
+    <!-- Link to the main style.css FIRST -->
+    <link rel="stylesheet" href="style.css"> 
+    <!-- Then link to the page-specific song-style.css -->
     <link rel="stylesheet" href="song-style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
     <!-- Media Session API Metadata -->
@@ -39,10 +42,6 @@
                 <span id="currentTime" class="time">0:00</span>
                 <input type="range" id="seekBar" class="seek-bar" value="0">
                 <span id="duration" class="time">0:00</span>
-            </div>
-            <div class="volume-container">
-                <i class="fa-solid fa-volume-high"></i>
-                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
             </div>
             <audio id="audioPlayer"></audio>
         </div>

@@ -169,7 +169,7 @@ body.loaded {
     font-size: 14px;
     font-weight: 300; /* Lighter for body text */
     line-height: 1.6;
-    background: var(--color-glass-bg);
+    background: rgba(255, 255, 255, 0.2); /* Increased opacity */
     border: 1px solid var(--color-glass-border);
     padding: 25px;
     border-radius: var(--border-radius-medium);
@@ -179,6 +179,7 @@ body.loaded {
     backdrop-filter: blur(var(--backdrop-blur-amount));
     -webkit-backdrop-filter: blur(var(--backdrop-blur-amount));
     box-shadow: var(--shadow-light);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Subtle dark shadow */
 }
 
 .description em {
