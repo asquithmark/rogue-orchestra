@@ -8,21 +8,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="index-page-background">
-    <div class="container">
-        <button id="themeSwitcherBtn" class="theme-switcher" aria-label="Toggle theme">
-            <i class="fas fa-sun"></i> <!-- Icon for light mode, will change to moon -->
-        </button>
-        <div class="title-container">
-            <h1 class="title">the rogue orchestra</h1>
+    <main>
+        <div class="container">
+            <button id="themeSwitcherBtn" class="theme-switcher" aria-label="Toggle theme">
+                <i class="fas fa-sun"></i> <!-- Icon for light mode, will change to moon -->
+            </button>
+            <div class="title-container">
+                <h1 class="title">the rogue orchestra</h1>
+            </div>
+            <section class="album-info">
+                <img src="assets/album.gif" alt="Album GIF" class="album-art">
+                <div class="description">
+                    in a world of absolute order, where every note is rehearsed, every rhythm predetermined, the orchestra senses something beneath the surface. quietly restless, they begin to question the boundaries they've always accepted. this collection isn't a rebellion; it's a discovery. the instruments find new languages, shifting quietly toward sounds they've never voiced before. it's an exploration of authenticity—an invitation to listen deeply, beneath what's immediately heard.
+                </div>
+            </section>
+            <section aria-labelledby="tracklist-title-id">
+                <h2 class="tracklist-title" id="tracklist-title-id">tracklist</h2>
+                <div id="trackList" class="tracklist-container"></div>
+            </section>
         </div>
-        <img src="assets/album.gif" alt="Album GIF" class="album-art">
-        <div class="description">
-            in a world of absolute order, where every note is rehearsed, every rhythm predetermined, the orchestra senses something beneath the surface. quietly restless, they begin to question the boundaries they've always accepted. this collection isn't a rebellion; it's a discovery. the instruments find new languages, shifting quietly toward sounds they've never voiced before. it's an exploration of authenticity—an invitation to listen deeply, beneath what's immediately heard.
-        </div>
-        <h2 class="tracklist-title">tracklist</h2>
-        <div id="trackList" class="tracklist-container"></div>
-    </div>
-
+    </main>
     <div id="introPopup" class="popup-overlay" style="display: none;">
         <div class="popup-content glass-popup">
             <p id="popupText"><em>to enjoy this properly, sit down, close your eyes, turn the volume up, and let each track become the soundtrack to a film only you can see. pay attention to every detail, immerse yourself, and get lost inside the world it creates.</em></p>
