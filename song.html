@@ -16,37 +16,42 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
-    <div class="container">
-        <button id="themeSwitcherBtn" class="theme-switcher" aria-label="Toggle theme">
-            <i class="fas fa-sun"></i> <!-- Icon for light mode, will change to moon -->
-        </button>
-        <div class="title-container">
-            <h1 class="title">the rogue orchestra</h1>
-            <a href="#" id="backLink" class="back-link">← back to album</a>
-        </div>
-        <img src="assets/album.gif" alt="Album GIF" class="album-art" id="albumArt">
-        <h2 id="songTitle" class="song-title"></h2>
-        <p id="songDescription" class="song-description"></p>
-        <span id="toggleDescription" class="toggle-description">show more</span>
-
-        <!-- 🎵 Futuristic Player -->
-        <div class="audio-player">
-            <div class="player-controls">
-                <button id="shuffleBtn" class="control-button"><i class="fa-solid fa-shuffle"></i></button>
-                <button id="prevSong" class="control-button"><i class="fa-solid fa-backward-step"></i></button>
-                <button id="playPauseBtn" class="play-pause"><i class="fa-solid fa-play"></i></button>
-                <button id="nextSong" class="control-button"><i class="fa-solid fa-forward-step"></i></button>
-                <button id="repeatBtn" class="control-button"><i class="fa-solid fa-repeat"></i></button>
+    <main>
+        <div class="container">
+            <button id="themeSwitcherBtn" class="theme-switcher" aria-label="Toggle theme">
+                <i class="fas fa-sun"></i> <!-- Icon for light mode, will change to moon -->
+            </button>
+            <div class="title-container">
+                <h1 class="title">the rogue orchestra</h1>
+                <a href="#" id="backLink" class="back-link">← back to album</a>
             </div>
-            <div class="seek-container">
-                <span id="currentTime" class="time">0:00</span>
-                <input type="range" id="seekBar" class="seek-bar" value="0">
-                <span id="duration" class="time">0:00</span>
-            </div>
-            <audio id="audioPlayer"></audio>
-        </div>
-    </div>
+            <section aria-labelledby="songTitle">
+                <img src="assets/album.gif" alt="Album GIF" class="album-art" id="albumArt">
+                <h2 id="songTitle" class="song-title"></h2>
+                <p id="songDescription" class="song-description"></p>
+                <span id="toggleDescription" class="toggle-description">show more</span>
+            </section>
 
+            <!-- 🎵 Futuristic Player -->
+            <section aria-label="Audio Player">
+                <div class="audio-player">
+                    <div class="player-controls">
+                        <button id="shuffleBtn" class="control-button" aria-label="Toggle shuffle"><i class="fa-solid fa-shuffle"></i></button>
+                        <button id="prevSong" class="control-button" aria-label="Previous song"><i class="fa-solid fa-backward-step"></i></button>
+                        <button id="playPauseBtn" class="play-pause" aria-label="Play or Pause"><i class="fa-solid fa-play"></i></button>
+                        <button id="nextSong" class="control-button" aria-label="Next song"><i class="fa-solid fa-forward-step"></i></button>
+                        <button id="repeatBtn" class="control-button" aria-label="Toggle repeat"><i class="fa-solid fa-repeat"></i></button>
+                    </div>
+                    <div class="seek-container">
+                        <span id="currentTime" class="time">0:00</span>
+                        <input type="range" id="seekBar" class="seek-bar" value="0">
+                        <span id="duration" class="time">0:00</span>
+                    </div>
+                    <audio id="audioPlayer"></audio>
+                </div>
+            </section>
+        </div>
+    </main>
     <script src="script-song.js"></script>
     <script src="theme-switcher.js" defer></script>
 </body>
