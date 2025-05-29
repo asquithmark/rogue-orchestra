@@ -1,160 +1,74 @@
-/* Basic Reset */
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.5);
+    border-radius: 3px;
+}
+html.dark ::-webkit-scrollbar-thumb { /* Adjusted for html.dark */
+    background: rgba(150, 150, 150, 0.4); 
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 100, 100, 0.7);
+}
+html.dark ::-webkit-scrollbar-thumb:hover { /* Adjusted for html.dark */
+    background: rgba(150, 150, 150, 0.6);
+}
+::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+/* Custom styles for range inputs */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px; /* slimmer track */
+    background: transparent; /* Track itself will be styled by pseudo-elements */
+    cursor: pointer;
+    /* border-radius: 3px; /* Applied to track instead */
 }
 
-body {
-    line-height: 1.6;
-    min-height: 100vh;
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background-color: #e5e7eb; /* light mode track color: gray-200 */
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+html.dark input[type="range"]::-webkit-slider-runnable-track { /* Adjusted for html.dark */
+    background-color: #374151; /* dark mode track color: gray-700 */
+}
+input[type="range"]::-moz-range-track { /* Firefox */
+    width: 100%;
+    height: 6px;
+    background-color: #e5e7eb; /* gray-200 */
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+html.dark input[type="range"]::-moz-range-track { /* Firefox */ /* Adjusted for html.dark */
+    background-color: #374151; /* gray-700 */
 }
 
-img, picture, video, canvas, svg {
-    display: block;
-    max-width: 100%;
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -5px; /* (track_height - thumb_height) / 2 for vertical centering if track is 6px and thumb 16px */
+    height: 16px;
+    width: 16px;
+    background-color: #0f766e; /* Deeper Rich Teal: from mockup (teal-700) */
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
 }
-
-input, button, textarea, select {
-    font: inherit;
-}
-
-:root {
-    /* Typography */
-    --font-family-primary: 'Satoshi', sans-serif; /* Satoshi is already linked in HTML */
-    --font-weight-light: 300;
-    --font-weight-regular: 400;
-    --font-weight-medium: 500;
-    --font-weight-bold: 700;
-
-    --font-size-display: clamp(2.5rem, 6vw, 4rem); /* Responsive display font size */
-    --font-size-h1: clamp(2rem, 5vw, 3rem);
-    --font-size-h2: clamp(1.5rem, 4vw, 2.25rem);
-    --font-size-h3: clamp(1.25rem, 3vw, 1.75rem);
-    --font-size-body: 1rem; /* Base size for mobile */
-    --font-size-small: 0.875rem;
-    --font-size-caption: 0.75rem;
-
-    /* Spacing Units (Mobile First) */
-    --spacing-unit: 8px;
-    --space-xs: var(--spacing-unit);        /* 8px */
-    --space-sm: calc(var(--spacing-unit) * 2);  /* 16px */
-    --space-md: calc(var(--spacing-unit) * 3);  /* 24px */
-    --space-lg: calc(var(--spacing-unit) * 4);  /* 32px */
-    --space-xl: calc(var(--spacing-unit) * 6);  /* 48px */
-    --space-xxl: calc(var(--spacing-unit) * 8); /* 64px */
-    
-    /* Layout */
-    --content-max-width: 600px; /* Max width for main content column on mobile */
-    --container-padding: var(--space-md); /* Default container padding */
-
-    /* Border Radii */
-    --radius-xs: 4px;
-    --radius-sm: 8px;
-    --radius-md: 12px; /* Common for cards, buttons */
-    --radius-lg: 20px; /* Larger elements, popups */
-    --radius-full: 50%;
-
-    /* Accent Color */
-    --color-accent-hsl: 180, 100%, 35%; /* Teal: HSL for easier manipulation e.g. hsla(var(--color-accent-hsl), 0.5) */
-    --color-accent: hsl(var(--color-accent-hsl));
-    --color-accent-hover: hsl(180, 100%, 40%); /* Slightly lighter/brighter */
-    --color-accent-text-on-accent: #FFFFFF; /* Text color when on accent background */
-
-    /* Dark Mode Colors (Default Theme) */
-    --color-bg-dark: #121212;
-    --color-surface-dark: #1E1E1E; /* For elements slightly above bg */
-    --color-text-primary-dark: #E5E5E5;
-    --color-text-secondary-dark: #A0A0A0;
-    --color-border-dark: #333333; 
-    --color-glass-bg-dark: rgba(40, 40, 40, 0.6); /* Darker, more subtle glass */
-    --color-glass-border-dark: rgba(255, 255, 255, 0.1);
-    --shadow-color-rgb-dark: 0, 0, 0; /* For building shadows */
-
-    /* Light Mode Colors */
-    --color-bg-light: #F7F7F7;
-    --color-surface-light: #FFFFFF;
-    --color-text-primary-light: #181818;
-    --color-text-secondary-light: #555555;
-    --color-border-light: #DDDDDD;
-    --color-glass-bg-light: rgba(255, 255, 255, 0.6); /* Lighter glass */
-    --color-glass-border-light: rgba(0, 0, 0, 0.08);
-    --shadow-color-rgb-light: 0, 0, 0; /* Can be adjusted if light mode shadows need different base color */
-
-    /* Mapped Generic Variables (Defaults to Dark Theme) */
-    --color-bg: var(--color-bg-dark);
-    --color-surface: var(--color-surface-dark);
-    --color-text-primary: var(--color-text-primary-dark);
-    --color-text-secondary: var(--color-text-secondary-dark);
-    --color-border: var(--color-border-dark);
-    --color-glass-bg: var(--color-glass-bg-dark);
-    --color-glass-border: var(--color-glass-border-dark);
-    --shadow-color-rgb: var(--shadow-color-rgb-dark);
-
-    /* Shadows (Subtle, Neumorphism-Inspired for depth) */
-    /* These are examples; can be refined. Using CSS vars for color allows theme changes. */
-    --shadow-soft-s: 2px 2px 5px rgba(var(--shadow-color-rgb), 0.2), -2px -2px 5px rgba(255,255,255,0.05);
-    --shadow-soft-m: 4px 4px 10px rgba(var(--shadow-color-rgb), 0.2), -4px -4px 10px rgba(255,255,255,0.05);
-    --shadow-glass: 0 8px 20px rgba(var(--shadow-color-rgb), 0.25); /* Simpler shadow for glass elements */
-    --shadow-interactive: 0 2px 8px rgba(var(--shadow-color-rgb), 0.3); /* For buttons etc. */
-    --shadow-inset-pressed: inset 2px 2px 5px rgba(var(--shadow-color-rgb),0.2), inset -2px -2px 5px rgba(255,255,255,0.05);
-    
-    /* Backdrop Blur for Glassmorphism */
-    --backdrop-blur-amount: 8px; /* Slightly more subtle blur */
-}
-
-body.light-mode {
-    --color-bg: var(--color-bg-light);
-    --color-surface: var(--color-surface-light);
-    --color-text-primary: var(--color-text-primary-light);
-    --color-text-secondary: var(--color-text-secondary-light);
-    --color-border: var(--color-border-light);
-    --color-glass-bg: var(--color-glass-bg-light);
-    --color-glass-border: var(--color-glass-border-light);
-    --shadow-color-rgb: var(--shadow-color-rgb-light); /* Ensure this is defined if different for light */
-
-    /* Update shadows for light mode if they need different intensity or color nuance */
-    --shadow-soft-s: 2px 2px 5px rgba(var(--shadow-color-rgb), 0.07), -2px -2px 5px rgba(255,255,255,0.7);
-    --shadow-soft-m: 4px 4px 10px rgba(var(--shadow-color-rgb), 0.07), -4px -4px 10px rgba(255,255,255,0.7);
-    --shadow-glass: 0 8px 20px rgba(var(--shadow-color-rgb), 0.1);
-    --shadow-interactive: 0 2px 8px rgba(var(--shadow-color-rgb), 0.12);
-    --shadow-inset-pressed: inset 2px 2px 5px rgba(var(--shadow-color-rgb),0.07), inset -2px -2px 5px rgba(255,255,255,0.7);
-}
-
-body {
-    font-family: var(--font-family-primary);
-    font-weight: var(--font-weight-regular);
-    background-color: var(--color-bg);
-    color: var(--color-text-primary);
-    font-size: var(--font-size-body);
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transitions */
-}
-
-h1, h2, h3 {
-    font-weight: var(--font-weight-bold);
-    line-height: 1.2;
-    margin-bottom: var(--space-sm);
-    color: var(--color-text-primary); /* Ensure headings also transition color */
-}
-h1 { font-size: var(--font-size-h1); }
-h2 { font-size: var(--font-size-h2); }
-h3 { font-size: var(--font-size-h3); }
-
-p {
-    margin-bottom: var(--space-md);
-}
-
-a {
-    color: var(--color-accent);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-a:hover, a:focus {
-    color: var(--color-accent-hover);
-    text-decoration: underline; /* Optional, but good for accessibility */
+input[type="range"]::-moz-range-thumb { /* Firefox */
+    height: 16px;
+    width: 16px;
+    background-color: #0f766e; /* Deeper Rich Teal: from mockup (teal-700) */
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
 }
