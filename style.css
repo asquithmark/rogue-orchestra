@@ -1,74 +1,71 @@
-/* Custom scrollbar styles */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-thumb {
-    background: rgba(100, 100, 100, 0.5);
-    border-radius: 3px;
-}
-html.dark ::-webkit-scrollbar-thumb { /* Adjusted for html.dark */
-    background: rgba(150, 150, 150, 0.4); 
-}
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(100, 100, 100, 0.7);
-}
-html.dark ::-webkit-scrollbar-thumb:hover { /* Adjusted for html.dark */
-    background: rgba(150, 150, 150, 0.6);
-}
-::-webkit-scrollbar-track {
-    background: transparent;
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: sans-serif;
+  background: #fff;
+  color: #111;
 }
 
-/* Custom styles for range inputs */
-input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 6px; /* slimmer track */
-    background: transparent; /* Track itself will be styled by pseudo-elements */
-    cursor: pointer;
-    /* border-radius: 3px; /* Applied to track instead */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 6px;
-    background-color: #e5e7eb; /* light mode track color: gray-200 */
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-}
-html.dark input[type="range"]::-webkit-slider-runnable-track { /* Adjusted for html.dark */
-    background-color: #374151; /* dark mode track color: gray-700 */
-}
-input[type="range"]::-moz-range-track { /* Firefox */
-    width: 100%;
-    height: 6px;
-    background-color: #e5e7eb; /* gray-200 */
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-}
-html.dark input[type="range"]::-moz-range-track { /* Firefox */ /* Adjusted for html.dark */
-    background-color: #374151; /* gray-700 */
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    margin-top: -5px; /* (track_height - thumb_height) / 2 for vertical centering if track is 6px and thumb 16px */
-    height: 16px;
-    width: 16px;
-    background-color: #0f766e; /* Deeper Rich Teal: from mockup (teal-700) */
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: background-color 0.3s ease;
+.album-info img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
 }
-input[type="range"]::-moz-range-thumb { /* Firefox */
-    height: 16px;
-    width: 16px;
-    background-color: #0f766e; /* Deeper Rich Teal: from mockup (teal-700) */
-    border-radius: 50%;
-    border: none;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: background-color 0.3s ease;
+
+.album-info .description {
+  margin-top: 1rem;
+}
+
+.tracklist-container {
+  margin-top: 1rem;
+}
+
+.track-link {
+  display: block;
+  margin: 0.25rem 0;
+  color: #0066cc;
+  text-decoration: none;
+}
+.track-link:hover {
+  text-decoration: underline;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.popup-content {
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+.collapsed {
+  max-height: 4.5em;
+  overflow: hidden;
+}
+
+.toggle-description {
+  cursor: pointer;
+  display: inline-block;
+  color: #0066cc;
+  margin-top: 0.5rem;
 }

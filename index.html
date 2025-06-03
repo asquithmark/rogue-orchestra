@@ -1,43 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Rogue Orchestra</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,301,701,300,501,401,901,400,2&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rogue Orchestra</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 ease-in-out h-full flex items-center justify-center p-4 font-light">
-    <main>
-        <div class="container">
-            <button id="themeSwitcherBtn" class="theme-switcher" aria-label="Toggle theme">
-                <i class="fas fa-sun"></i> <!-- Icon for light mode, will change to moon -->
-            </button>
-            <div class="title-container">
-                <h1 class="title">the rogue orchestra</h1>
-            </div>
-            <section class="album-info">
-                <img src="assets/album.gif" alt="Album GIF" class="album-art">
-                <div class="description">
-                    in a world of absolute order, where every note is rehearsed, every rhythm predetermined, the orchestra senses something beneath the surface. quietly restless, they begin to question the boundaries they've always accepted. this collection isn't a rebellion; it's a discovery. the instruments find new languages, shifting quietly toward sounds they've never voiced before. it's an exploration of authenticity—an invitation to listen deeply, beneath what's immediately heard.
-                </div>
-            </section>
-            <section aria-labelledby="tracklist-title-id">
-                <h2 class="tracklist-title" id="tracklist-title-id">tracklist</h2>
-                <div id="trackList" class="tracklist-container"></div>
-            </section>
-        </div>
-    </main>
-    <div id="introPopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content glass-popup">
-            <p id="popupText"><em>to enjoy this properly, sit down, close your eyes, turn the volume up, and let each track become the soundtrack to a film only you can see. pay attention to every detail, immerse yourself, and get lost inside the world it creates.</em></p>
-            <button id="continueToSongBtn" class="popup-button">i'm ready</button>
-        </div>
+<body>
+  <div class="container">
+    <h1 class="title">the rogue orchestra</h1>
+    <section class="album-info">
+      <img src="assets/album.gif" alt="Album art">
+      <p class="description">
+        in a world of absolute order, where every note is rehearsed, every rhythm predetermined, the orchestra senses something beneath the surface. quietly restless, they begin to question the boundaries they've always accepted. this collection isn't a rebellion; it's a discovery. the instruments find new languages, shifting quietly toward sounds they've never voiced before. it's an exploration of authenticity—an invitation to listen deeply, beneath what's immediately heard.
+      </p>
+    </section>
+    <h2>tracklist</h2>
+    <div id="trackList" class="tracklist-container"></div>
+  </div>
+  <div id="introPopup" class="popup-overlay">
+    <div class="popup-content">
+      <p><em>to enjoy this properly, sit down, close your eyes, turn the volume up, and let each track become the soundtrack to a film only you can see. pay attention to every detail, immerse yourself, and get lost inside the world it creates.</em></p>
+      <button id="continueToSongBtn">i'm ready</button>
     </div>
-
-    <script src="script-index.js"></script>
-    <script src="theme-switcher.js" defer></script>
+  </div>
+  <script src="script-index.js"></script>
 </body>
 </html>
