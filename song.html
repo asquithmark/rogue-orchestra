@@ -5,19 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Song</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+  <button id="themeSwitcherBtn" class="theme-btn"><i class="fas fa-moon"></i></button>
   <div class="container">
-    <a href="#" id="backLink">← back to album</a>
+    <a href="#" id="backLink" class="back-link">← back to album</a>
     <h1 class="title">the rogue orchestra</h1>
-    <section>
-      <img src="assets/album.gif" alt="Album art" id="albumArt">
-      <h2 id="songTitle"></h2>
-      <p id="songDescription" class="collapsed"></p>
-      <span id="toggleDescription" class="toggle-description">show more</span>
-    </section>
-    <audio id="audioPlayer" controls></audio>
+    <img src="assets/album.gif" alt="Album art" id="albumArt">
+    <h2 id="songTitle" class="song-title"></h2>
+    <h3 class="artist">the rogue orchestra</h3>
+    <div class="progress-container">
+      <span id="currentTime">0:00</span>
+      <input type="range" id="progressBar" value="0" min="0" max="100">
+      <span id="duration">0:00</span>
+    </div>
+    <div class="controls">
+      <button id="prevBtn"><i class="fas fa-backward"></i></button>
+      <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+      <button id="nextBtn"><i class="fas fa-forward"></i></button>
+    </div>
+    <p id="songDescription" class="collapsed"></p>
+    <span id="toggleDescription" class="toggle-description">show more</span>
+    <audio id="audioPlayer"></audio>
   </div>
+  <script src="theme-switcher.js"></script>
   <script src="script-song.js"></script>
 </body>
 </html>
