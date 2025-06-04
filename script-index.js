@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = document.createElement('a');
         link.href = `song.html?song=${index}`;
         link.textContent = song.title;
-        link.className = 'track-link';
+        link.className = 'track-button';
         link.addEventListener('click', (e) => {
           e.preventDefault();
           if (!localStorage.getItem('introShown')) {
