@@ -145,6 +145,7 @@ body {
   right: 1rem;
   width: 42px;
   height: 42px;
+  z-index: 1101;
   background: rgba(255,255,255,0.3);
   border: none;
   border-radius: 50%;
