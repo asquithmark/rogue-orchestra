@@ -33,6 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.value = 0;
     currentTimeEl.textContent = '0:00';
     durationEl.textContent = '0:00';
+
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: song.title,
+        artist: 'the rogue orchestra',
+        album: 'the rogue orchestra',
+        artwork: [
+          { src: 'assets/album.gif', sizes: '512x512', type: 'image/gif' }
+        ]
+      });
+    }
   }
 
   function formatTime(t) {
@@ -59,6 +70,15 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.play();
     playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
   });
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      prevBtn.click();
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      nextBtn.click();
+    });
+  }
 
   nextBtn.addEventListener('click', () => {
     if (songsData.length === 0) return;

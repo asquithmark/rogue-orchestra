@@ -16,8 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
         link.className = 'track-link';
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          pendingSongUrl = link.href;
-          introPopup.style.display = 'flex';
+          if (!localStorage.getItem('introShown')) {
+            pendingSongUrl = link.href;
+            introPopup.style.display = 'flex';
+            localStorage.setItem('introShown', 'true');
+          } else {
+            window.location.href = link.href;
+          }
         });
         trackListContainer.appendChild(link);
       });
