@@ -1,6 +1,6 @@
 :root {
   --bg-start: #000;
-  --bg-end: #0f766e;
+  --bg-end: #065f46;
   --card-bg: rgba(0,0,0,0.4);
   --card-border: rgba(255,255,255,0.2);
   --text-color: #eee;
@@ -8,7 +8,7 @@
 }
 body.light-mode {
   --bg-start: #fff;
-  --bg-end: #0f766e;
+  --bg-end: #0891b2;
   --card-bg: rgba(255,255,255,0.6);
   --card-border: rgba(0,0,0,0.1);
   --text-color: #111;
@@ -62,14 +62,21 @@ body {
   margin-top: 1rem;
 }
 
-.track-link {
+.track-button {
   display: block;
-  margin: 0.25rem 0;
-  color: var(--accent);
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  color: var(--text-color);
   text-decoration: none;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  text-align: center;
 }
-.track-link:hover {
-  text-decoration: underline;
+.track-button:hover {
+  background: rgba(255,255,255,0.1);
 }
 
 .controls {
@@ -198,3 +205,16 @@ body {
   cursor: pointer;
 }
 
+.intro {
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.fade-in {
+  animation: fadeMove 0.4s ease;
+}
+
+@keyframes fadeMove {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

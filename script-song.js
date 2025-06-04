@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleEl = document.getElementById('songTitle');
   const descEl = document.getElementById('songDescription');
   const audio = document.getElementById('audioPlayer');
+  const introEl = document.getElementById("songIntro");
+  const container = document.querySelector(".container");
   const toggle = document.getElementById('toggleDescription');
   const backLink = document.getElementById('backLink');
 
@@ -28,12 +30,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const song = songsData[i];
     if (!song) return;
     titleEl.textContent = song.title;
-    descEl.innerHTML = song.description;
+    const match = song.description.match(/^<em>(.*?)<\/em><br>?/);
+    if (match) {
+      introEl.innerHTML = match[1];
+      introEl.style.display = "block";
+      descEl.innerHTML = song.description.replace(match[0], "");
+    } else {
+      introEl.style.display = "none";
+      descEl.innerHTML = song.description;
+    }
     audio.src = `assets/${song.audioFile}`;
     progressBar.value = 0;
     currentTimeEl.textContent = '0:00';
     durationEl.textContent = '0:00';
-
+    container.classList.remove('fade-in');
+    void container.offsetWidth;
+    container.classList.add('fade-in');
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: song.title,
@@ -45,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+
 
   function formatTime(t) {
     if (!t || isNaN(t)) return '0:00';
