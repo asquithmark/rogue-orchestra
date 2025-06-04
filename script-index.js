@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const trackListContainer = document.getElementById('trackList');
   const introPopup = document.getElementById('introPopup');
   const continueToSongBtn = document.getElementById('continueToSongBtn');
+  const albumDesc = document.getElementById('albumDescription');
+  const toggleAlbumDesc = document.getElementById('toggleAlbumDescription');
   let pendingSongUrl = '';
 
   fetch('songs.json')
@@ -33,4 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
       pendingSongUrl = '';
     }
   });
+
+  if (toggleAlbumDesc) {
+    toggleAlbumDesc.addEventListener('click', () => {
+      albumDesc.classList.toggle('collapsed');
+      toggleAlbumDesc.textContent = albumDesc.classList.contains('collapsed') ? 'show more' : 'show less';
+    });
+  }
 });

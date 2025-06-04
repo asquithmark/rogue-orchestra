@@ -160,3 +160,37 @@ body {
   margin-top: 0.5rem;
 }
 
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  backdrop-filter: blur(12px);
+  max-width: 400px;
+  text-align: center;
+}
+
+.popup-content button {
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
