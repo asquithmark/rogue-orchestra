@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.value = 0;
     currentTimeEl.textContent = '0:00';
     durationEl.textContent = '0:00';
-    container.classList.remove('fade-in');
+    container.classList.remove('pop-in');
     void container.offsetWidth;
-    container.classList.add('fade-in');
+    container.classList.add('pop-in');
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: song.title,
