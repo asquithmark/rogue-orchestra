@@ -28,10 +28,12 @@ jobs:
       - run: npm test
       - name: Generate config.js
         run: |
+          mkdir -p public
           cat <<EOF2 > config.js
           const SUPABASE_URL = '${SUPABASE_URL}';
           const SUPABASE_KEY = '${SUPABASE_KEY}';
           EOF2
+          cp config.js public/config.js
       - uses: actions/upload-pages-artifact@v2
         with:
           path: .
