@@ -29,8 +29,8 @@ jobs:
       - name: Generate config.js
         run: |
           cat <<EOF2 > config.js
-          const SUPABASE_URL = '${SUPABASE_URL}';
-          const SUPABASE_KEY = '${SUPABASE_KEY}';
+          const SUPABASE_URL = "${SUPABASE_URL}";
+          const SUPABASE_KEY = "${SUPABASE_KEY}";
           EOF2
       - uses: actions/upload-pages-artifact@v2
         with:
