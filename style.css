@@ -1,16 +1,16 @@
 :root {
   --bg-start: #000;
-  --bg-end: #065f46;
-  --card-bg: rgba(0,0,0,0.4);
-  --card-border: rgba(255,255,255,0.2);
+  --bg-end: #033a2e;
+  --card-bg: rgba(0,0,0,0.25);
+  --card-border: rgba(255,255,255,0.3);
   --text-color: #eee;
   --accent: #0d9488;
 }
 body.light-mode {
   --bg-start: #fff;
-  --bg-end: #0891b2;
-  --card-bg: rgba(255,255,255,0.6);
-  --card-border: rgba(0,0,0,0.1);
+  --bg-end: #05606d;
+  --card-bg: rgba(255,255,255,0.45);
+  --card-border: rgba(0,0,0,0.15);
   --text-color: #111;
 }
 
@@ -35,11 +35,15 @@ body {
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   border: 1px solid var(--card-border);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
 }
 
 .container.full-width {
   max-width: none;
+}
+
+.container.full-width .title {
+  font-weight: normal;
 }
 
 .title {
@@ -207,7 +211,7 @@ body {
   padding: 1.5rem;
   border: 1px solid var(--card-border);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
   max-width: 400px;
   text-align: center;
 }

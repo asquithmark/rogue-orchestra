@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleEl = document.getElementById('songTitle');
   const descEl = document.getElementById('songDescription');
   const audio = document.getElementById('audioPlayer');
+  audio.autoplay = true;
   const introEl = document.getElementById("songIntro");
   const container = document.querySelector(".container");
   const toggle = document.getElementById('toggleDescription');
@@ -24,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(songs => {
       songsData = songs;
       loadSong(index);
+      audio.play();
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
     });
 
   function loadSong(i) {
