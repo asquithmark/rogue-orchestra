@@ -29,11 +29,11 @@ jobs:
       - name: Generate config.js
         run: |
           mkdir -p public
-          cat <<EOF2 > config.js
+          cat <<EOF2 > public/config.js
           const SUPABASE_URL = '${SUPABASE_URL}';
           const SUPABASE_KEY = '${SUPABASE_KEY}';
           EOF2
-          cp config.js public/config.js
+          cp public/config.js config.js
       - uses: actions/upload-pages-artifact@v2
         with:
           path: .
