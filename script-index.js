@@ -1,125 +1,65 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const songIndex = parseInt(urlParams.get('song'), 10);
+document.addEventListener('DOMContentLoaded', async () => {
+  const list = document.getElementById('trackList');
+  const songs = await fetch('songs.json').then(r => r.json());
 
-  const voteContainer = document.createElement('div');
-  voteContainer.className = 'vote-container';
+  songs.forEach((song, idx) => {
+    const row = document.createElement('div');
+    row.className = 'track-row';
 
-  const voteUp = document.createElement('button');
-  voteUp.textContent = '👍';
-  voteUp.className = 'vote-btn';
-  voteUp.style.marginRight = '8px';
-  voteUp.style.padding = '6px 12px';
-  voteUp.style.fontSize = '1.2rem';
-  voteUp.style.cursor = 'pointer';
-  voteUp.style.backgroundColor = '#1a1a1a';
-  voteUp.style.color = '#fff';
-  voteUp.style.border = '1px solid #444';
-  voteUp.style.borderRadius = '4px';
-  voteUp.style.transition = 'background 0.3s';
-  voteUp.dataset.song = songIndex;
-  voteUp.dataset.vote = 'up';
+    const link = document.createElement('a');
+    link.href = `song.html?song=${idx}`;
+    link.textContent = song.title;
+    link.className = 'track-button';
 
-  const voteDown = document.createElement('button');
-  voteDown.textContent = '👎';
-  voteDown.className = 'vote-btn';
-  voteDown.style.marginRight = '8px';
-  voteDown.style.padding = '6px 12px';
-  voteDown.style.fontSize = '1.2rem';
-  voteDown.style.cursor = 'pointer';
-  voteDown.style.backgroundColor = '#1a1a1a';
-  voteDown.style.color = '#fff';
-  voteDown.style.border = '1px solid #444';
-  voteDown.style.borderRadius = '4px';
-  voteDown.style.transition = 'background 0.3s';
-  voteDown.dataset.song = songIndex;
-  voteDown.dataset.vote = 'down';
+    const voteContainer = document.createElement('div');
+    voteContainer.className = 'vote-container';
 
-  const voteCounts = document.createElement('span');
-  voteCounts.className = 'vote-counts';
-  voteCounts.textContent = 'Loading...';
-  voteCounts.style.marginLeft = '10px';
-  voteCounts.style.fontSize = '1rem';
+    const voteUp = document.createElement('button');
+    voteUp.textContent = '👍';
+    voteUp.className = 'vote-btn';
+    voteUp.dataset.song = idx;
+    voteUp.dataset.vote = 'up';
 
-  voteContainer.appendChild(voteUp);
-  voteContainer.appendChild(voteDown);
-  voteContainer.appendChild(voteCounts);
-  voteContainer.style.display = 'flex';
-  voteContainer.style.alignItems = 'center';
-  voteContainer.style.margin = '20px 0';
-  document.body.appendChild(voteContainer);
+    const voteDown = document.createElement('button');
+    voteDown.textContent = '👎';
+    voteDown.className = 'vote-btn';
+    voteDown.dataset.song = idx;
+    voteDown.dataset.vote = 'down';
 
-  function applyThemeStyles() {
-    const isDark = document.body.classList.contains('dark-theme');
-    const bgColor = isDark ? '#1a1a1a' : '#eee';
-    const hoverBg = isDark ? '#333' : '#ddd';
-    const textColor = isDark ? '#fff' : '#000';
-    const borderColor = isDark ? '#444' : '#bbb';
-    const countColor = isDark ? '#ccc' : '#333';
+    const voteCounts = document.createElement('span');
+    voteCounts.className = 'vote-counts';
+
+    voteContainer.append(voteUp, voteDown, voteCounts);
+    row.append(link, voteContainer);
+    list.appendChild(row);
+
+    updateVoteCounts(idx, voteCounts);
 
     [voteUp, voteDown].forEach(btn => {
-      btn.style.backgroundColor = bgColor;
-      btn.style.color = textColor;
-      btn.style.border = `1px solid ${borderColor}`;
-      btn.onmouseenter = () => btn.style.backgroundColor = hoverBg;
-      btn.onmouseleave = () => btn.style.backgroundColor = bgColor;
-    });
-    voteCounts.style.color = countColor;
-  }
-
-  async function updateVoteCounts(songId) {
-    try {
-      const upRes = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=vote&song_id=eq.${songId}&vote=eq.up&count=exact`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Prefer': 'count=exact'
-        }
+      btn.addEventListener('click', async () => {
+        await supabaseClient.from('votes').insert({ song_id: idx, vote: btn.dataset.vote });
+        updateVoteCounts(idx, voteCounts);
       });
-      const downRes = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=vote&song_id=eq.${songId}&vote=eq.down&count=exact`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Prefer': 'count=exact'
-        }
-      });
-      const upCount = upRes.headers.get('content-range')?.split('/')[1] || '0';
-      const downCount = downRes.headers.get('content-range')?.split('/')[1] || '0';
-      voteCounts.textContent = `👍 ${upCount}  👎 ${downCount}`;
-    } catch (err) {
-      voteCounts.textContent = 'Votes unavailable';
-    }
-  }
-
-  updateVoteCounts(songIndex);
-
-  [voteUp, voteDown].forEach(button => {
-    button.addEventListener('click', async () => {
-      const songId = parseInt(button.dataset.song);
-      const vote = button.dataset.vote;
-
-      await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-          song_id: songId,
-          vote: vote
-        })
-      });
-
-      updateVoteCounts(songId);
     });
   });
 
-  // Apply initial theme
-  applyThemeStyles();
+  async function updateVoteCounts(songId, el) {
+    try {
+      const { count: up } = await supabaseClient
+        .from('votes')
+        .select('id', { count: 'exact', head: true })
+        .eq('song_id', songId)
+        .eq('vote', 'up');
 
-  // Observe theme changes
-  const observer = new MutationObserver(() => applyThemeStyles());
-  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      const { count: down } = await supabaseClient
+        .from('votes')
+        .select('id', { count: 'exact', head: true })
+        .eq('song_id', songId)
+        .eq('vote', 'down');
+
+      el.textContent = `👍 ${up || 0}  👎 ${down || 0}`;
+    } catch {
+      el.textContent = 'Votes unavailable';
+    }
+  }
 });
