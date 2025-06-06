@@ -1,17 +1,17 @@
 :root {
   --bg-start: #000;
-  --bg-end: #033a2e;
-  --card-bg: rgba(0,0,0,0.25);
-  --card-border: rgba(255,255,255,0.3);
+  --bg-end: #042f2e;
+  --card-bg: rgba(0,0,0,0.2);
+  --card-border: rgba(255,255,255,0.25);
   --text-color: #eee;
-  --accent: #0d9488;
+  --accent: #115e59;
 }
 
 body.light-mode {
   --bg-start: #fff;
-  --bg-end: #05606d;
-  --card-bg: rgba(255,255,255,0.45);
-  --card-border: rgba(0,0,0,0.15);
+  --bg-end: #0f766e;
+  --card-bg: rgba(255,255,255,0.35);
+  --card-border: rgba(0,0,0,0.1);
   --text-color: #111;
 }
 
@@ -76,10 +76,10 @@ body {
   text-decoration: none;
   background: linear-gradient(
     to bottom right,
-    rgba(255,255,255,0.25),
-    rgba(255,255,255,0.05)
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.03)
   );
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 12px;
   backdrop-filter: blur(20px);
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
@@ -88,7 +88,7 @@ body {
 }
 
 .track-button:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.25);
   transform: translateY(-2px) scale(1.02);
 }
 
@@ -100,7 +100,7 @@ body {
 }
 
 .controls button {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);
   border: none;
   border-radius: 50%;
   padding: 0.75rem;
@@ -126,7 +126,7 @@ body {
   flex: 1;
   appearance: none;
   height: 6px;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.25);
   border-radius: 3px;
   outline: none;
   overflow: hidden;
@@ -150,7 +150,7 @@ body {
   width: 42px;
   height: 42px;
   z-index: 1101;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.25);
   border: none;
   border-radius: 50%;
   display: flex;
@@ -221,7 +221,7 @@ body {
 
 .popup-content button {
   margin-top: 1rem;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);
   border: none;
   border-radius: 50px;
   padding: 0.5rem 1rem;
@@ -257,7 +257,7 @@ body {
 }
 
 .vote-btn {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);
   border: 1px solid var(--card-border);
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
@@ -271,7 +271,7 @@ body {
 }
 
 .vote-btn:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.25);
 }
 
 .vote-counts {
