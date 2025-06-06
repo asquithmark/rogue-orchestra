@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleEl = document.getElementById('songTitle');
   const descEl = document.getElementById('songDescription');
   const audio = document.getElementById('audioPlayer');
+  audio.autoplay = true;
   const introEl = document.getElementById("songIntro");
   const container = document.querySelector(".container");
   const toggle = document.getElementById('toggleDescription');
@@ -24,7 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(songs => {
       songsData = songs;
       loadSong(index);
+      attemptAutoPlay();
     });
+
+  function attemptAutoPlay() {
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      }).catch(() => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      });
+    }
+  }
 
   function loadSong(i) {
     const song = songsData[i];
@@ -68,8 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playPauseBtn.addEventListener('click', () => {
     if (audio.paused) {
-      audio.play();
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      attemptAutoPlay();
     } else {
       audio.pause();
       playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -80,8 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (songsData.length === 0) return;
     index = (index - 1 + songsData.length) % songsData.length;
     loadSong(index);
-    audio.play();
-    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    attemptAutoPlay();
   });
 
   if ('mediaSession' in navigator) {
@@ -97,8 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (songsData.length === 0) return;
     index = (index + 1) % songsData.length;
     loadSong(index);
-    audio.play();
-    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    attemptAutoPlay();
   });
 
   audio.addEventListener('timeupdate', () => {
