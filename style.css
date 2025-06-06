@@ -295,3 +295,34 @@ body:not(.light-mode) .back-link {
   justify-content: space-between;
   align-items: center;
 }
+
+.track-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.track-item {
+  margin: 0.5rem 0;
+}
+
+.track-item a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.track-item a:hover {
+  opacity: 0.8;
+}
+
+.track-score {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9rem;
+}

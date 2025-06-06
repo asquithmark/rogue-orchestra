@@ -30,6 +30,8 @@ jobs:
           cp config.js                dist/
           cp script-index.js          dist/
           cp script-song.js           dist/
+          cp songs.json               dist/
+          cp supabaseClient.js        dist/
           cp -R song/                 dist/song/
           cp -R assets/               dist/assets/
           touch dist/.nojekyll

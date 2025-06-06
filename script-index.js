@@ -3,48 +3,89 @@
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// fetch and display the score for a given song ID
+// Function to load and display the track list
+async function loadTrackList() {
+  try {
+    const response = await fetch('./songs.json');
+    if (!response.ok) throw new Error(`Failed to load songs.json: ${response.status}`);
+    const songs = await response.json();
+    const trackList = document.getElementById('trackList');
+    if (!trackList) {
+      console.error('No <ul id="trackList"> found in index.html');
+      return;
+    }
+
+    songs.forEach(song => {
+      const li = document.createElement('li');
+      li.classList.add('track-item');
+
+      const a = document.createElement('a');
+      a.href = `./song/song.html?id=${song.id}`;
+      a.textContent = song.title;
+
+      const span = document.createElement('span');
+      span.classList.add('track-score');
+      span.setAttribute('data-score', song.id);
+      span.textContent = '0';
+
+      a.appendChild(document.createTextNode(' '));
+      a.appendChild(span);
+      li.appendChild(a);
+      trackList.appendChild(li);
+
+      refreshScore(song.id);
+    });
+  } catch (error) {
+    console.error('Error loading track list:', error);
+  }
+}
+
+// Fetch and display the score for a given song ID
 async function refreshScore(songId) {
-  // count up-votes
+  // Count up-votes
   const { count: ups, error: errUp } = await supabase
     .from('votes')
     .select('*', { head: true, count: 'exact' })
     .eq('song_id', songId)
     .eq('vote', 'up');
-
   if (errUp) {
-    console.error('Error fetching up-votes:', errUp);
+    console.error('Error fetching up-votes for', songId, errUp);
     return;
   }
 
-  // count down-votes
+  // Count down-votes
   const { count: downs, error: errDown } = await supabase
     .from('votes')
     .select('*', { head: true, count: 'exact' })
     .eq('song_id', songId)
     .eq('vote', 'down');
-
   if (errDown) {
-    console.error('Error fetching down-votes:', errDown);
+    console.error('Error fetching down-votes for', songId, errDown);
     return;
   }
 
-  // find the <span> that shows this song’s score
-  const span = document.querySelector(`[data-score="${songId}"]`);
+  // Find the <span data-score="songId">
+  const selector = `[data-score="${songId}"]`;
+  const span = document.querySelector(selector);
   if (span) {
-    span.textContent = ups - downs;
+    span.textContent = (ups - downs).toString();
   }
 }
 
-// on page load, refresh every song’s score
+// On page load, load the track list and refresh scores
 document.addEventListener('DOMContentLoaded', () => {
-  // find all score spans: in index.html, each song entry needs something like
-  // <span class="track-score" data-score="42">0</span>
-  const spans = document.querySelectorAll('[data-score]');
-  spans.forEach((span) => {
-    const songId = parseInt(span.dataset.score, 10);
-    if (!isNaN(songId)) {
-      refreshScore(songId);
-    }
-  });
+  loadTrackList();
+
+  // Optional: subscribe to real-time updates
+  supabase
+    .channel('votes')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'votes' },
+      payload => {
+        const newSongId = payload.new.song_id;
+        refreshScore(newSongId);
+      }
+    )
+    .subscribe();
 });
