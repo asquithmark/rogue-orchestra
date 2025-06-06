@@ -27,7 +27,8 @@
       <button id="continueToSongBtn">i'm ready</button>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- Pin Supabase to a specific UMD build so the global `supabase` object is available -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="config.js"></script>
   <script src="supabaseClient.js"></script>
   <script src="theme-switcher.js"></script>
