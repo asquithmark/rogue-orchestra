@@ -10,6 +10,9 @@ necessary credentials without committing them to source control.
 For local development you can still create `config.js` manually. Copy
 `config.example.js` to `config.js` and fill in your own Supabase URL and key.
 
+The HTML files load the Supabase library from jsDelivr using a pinned UMD build
+so that the global `supabase` object is always available.
+
 ## Running tests
 
 1. Ensure Node.js is installed.
