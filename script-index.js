@@ -36,42 +36,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    /* voting UI */
-    const voteContainer = document.createElement('div');
-    voteContainer.className = 'vote-container';
-
-    const voteUp   = document.createElement('button');
-    voteUp.textContent   = '👍';
-    voteUp.className     = 'vote-btn';
-    voteUp.dataset.song  = idx;
-    voteUp.dataset.vote  = 'up';
-
-    const voteDown = document.createElement('button');
-    voteDown.textContent  = '👎';
-    voteDown.className    = 'vote-btn';
-    voteDown.dataset.song = idx;
-    voteDown.dataset.vote = 'down';
-
-    const voteCounts = document.createElement('span');
-    voteCounts.className = 'vote-counts';
-
-    voteContainer.append(voteUp, voteDown, voteCounts);
-    row.append(link, voteContainer);
+    /* vote score */
+    const scoreEl = document.createElement('span');
+    scoreEl.className = 'track-score';
+    row.append(link, scoreEl);
     trackListContainer.appendChild(row);
 
-    updateVoteCounts(idx, voteCounts);
-
-    [voteUp, voteDown].forEach(btn => {
-      btn.addEventListener('click', async () => {
-        if (!window.supabaseClient) return;
-        try {
-          await supabaseClient.from('votes').insert({ song_id: idx, vote: btn.dataset.vote });
-          updateVoteCounts(idx, voteCounts);
-        } catch (err) {
-          console.error('Vote insert failed', err);
-        }
-      });
-    });
+    updateScore(idx, scoreEl);
   });
 
   /* ---------- intro popup handlers ---------- */
@@ -99,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /* ---------- helpers ---------- */
-  async function updateVoteCounts(songId, el) {
+  async function updateScore(songId, el) {
     if (!window.supabaseClient) {
       el.textContent = '';
       return;
@@ -117,7 +88,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         .eq('song_id', songId)
         .eq('vote', 'down');
 
-      el.textContent = `👍 ${up || 0}  👎 ${down || 0}`;
+      const score = (up || 0) - (down || 0);
+      el.textContent = `score: ${score >= 0 ? '+' : ''}${score}`;
     } catch (err) {
       console.error('Failed to fetch vote counts', err);
       el.textContent = 'Votes unavailable';
