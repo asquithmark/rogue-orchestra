@@ -175,6 +175,19 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.currentTime = (progressBar.value / 100) * audio.duration;
   });
 
+  /* -------- autoplay next song -------- */
+  audio.addEventListener('ended', () => {
+    if (!songsData.length) return;
+    if (index < songsData.length - 1) {
+      index += 1;
+      loadSong(index);
+      audio.play();
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else {
+      playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+  });
+
   /* -------- description toggle & back link -------- */
   toggle.addEventListener('click', () => {
     descEl.classList.toggle('collapsed');
