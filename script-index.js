@@ -1,64 +1,105 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const trackListContainer = document.getElementById('trackList');
-  const introPopup = document.getElementById('introPopup');
+  const introPopup        = document.getElementById('introPopup');
   const continueToSongBtn = document.getElementById('continueToSongBtn');
-  const albumDesc = document.getElementById('albumDescription');
-  const toggleAlbumDesc = document.getElementById('toggleAlbumDescription');
-  let pendingSongUrl = '';
+  const albumDesc         = document.getElementById('albumDescription');
+  const toggleAlbumDesc   = document.getElementById('toggleAlbumDescription');
+  let pendingSongUrl      = '';
 
-  fetch('songs.json')
-    .then(r => r.json())
-    .then(async data => {
-      for (const [index, song] of data.entries()) {
-        const row = document.createElement('div');
-        row.className = 'track-row';
+  /* ---------- load song list ---------- */
+  let songs = [];
+  try {
+    songs = await fetch('songs.json').then(r => r.json());
+  } catch (err) {
+    console.error('Could not load songs.json', err);
+    return;
+  }
 
-        const link = document.createElement('a');
-        link.href = `song.html?song=${index}`;
-        link.textContent = song.title;
-        link.className = 'track-button';
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (!localStorage.getItem('introShown')) {
-            pendingSongUrl = link.href;
-            introPopup.style.display = 'flex';
-            localStorage.setItem('introShown', 'true');
-          } else {
-            window.location.href = link.href;
-          }
-        });
+  songs.forEach((song, idx) => {
+    const row  = document.createElement('div');
+    row.className = 'track-row';
 
-        const scoreEl = document.createElement('span');
-        scoreEl.className = 'track-score';
-        row.appendChild(link);
-        row.appendChild(scoreEl);
-        trackListContainer.appendChild(row);
+    /* song link */
+    const link = document.createElement('a');
+    link.href        = `song.html?song=${idx}`;
+    link.textContent = song.title;
+    link.className   = 'track-button';
 
-        updateScore(index, scoreEl);
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      if (!localStorage.getItem('introShown')) {
+        pendingSongUrl        = link.href;
+        introPopup.style.display = 'flex';
+        localStorage.setItem('introShown', 'true');
+      } else {
+        window.location.href = link.href;
       }
     });
 
-  continueToSongBtn.addEventListener('click', () => {
-    if (pendingSongUrl) {
-      window.location.href = pendingSongUrl;
-    }
+    /* voting UI */
+    const voteContainer = document.createElement('div');
+    voteContainer.className = 'vote-container';
+
+    const voteUp   = document.createElement('button');
+    voteUp.textContent   = '👍';
+    voteUp.className     = 'vote-btn';
+    voteUp.dataset.song  = idx;
+    voteUp.dataset.vote  = 'up';
+
+    const voteDown = document.createElement('button');
+    voteDown.textContent  = '👎';
+    voteDown.className    = 'vote-btn';
+    voteDown.dataset.song = idx;
+    voteDown.dataset.vote = 'down';
+
+    const voteCounts = document.createElement('span');
+    voteCounts.className = 'vote-counts';
+
+    voteContainer.append(voteUp, voteDown, voteCounts);
+    row.append(link, voteContainer);
+    trackListContainer.appendChild(row);
+
+    updateVoteCounts(idx, voteCounts);
+
+    [voteUp, voteDown].forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!window.supabaseClient) return;
+        try {
+          await supabaseClient.from('votes').insert({ song_id: idx, vote: btn.dataset.vote });
+          updateVoteCounts(idx, voteCounts);
+        } catch (err) {
+          console.error('Vote insert failed', err);
+        }
+      });
+    });
   });
 
-  introPopup.addEventListener('click', (e) => {
-    if (e.target === introPopup) {
-      introPopup.style.display = 'none';
-      pendingSongUrl = '';
-    }
-  });
+  /* ---------- intro popup handlers ---------- */
+  if (continueToSongBtn) {
+    continueToSongBtn.addEventListener('click', () => {
+      if (pendingSongUrl) window.location.href = pendingSongUrl;
+    });
+  }
 
-  if (toggleAlbumDesc) {
+  if (introPopup) {
+    introPopup.addEventListener('click', e => {
+      if (e.target === introPopup) {
+        introPopup.style.display = 'none';
+        pendingSongUrl = '';
+      }
+    });
+  }
+
+  /* ---------- album description toggle ---------- */
+  if (toggleAlbumDesc && albumDesc) {
     toggleAlbumDesc.addEventListener('click', () => {
       albumDesc.classList.toggle('collapsed');
       toggleAlbumDesc.textContent = albumDesc.classList.contains('collapsed') ? 'show more' : 'show less';
     });
   }
 
-  async function updateScore(id, el) {
+  /* ---------- helpers ---------- */
+  async function updateVoteCounts(songId, el) {
     if (!window.supabaseClient) {
       el.textContent = '';
       return;
@@ -67,19 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const { count: up } = await supabaseClient
         .from('votes')
         .select('id', { count: 'exact', head: true })
-        .eq('song_id', id)
+        .eq('song_id', songId)
         .eq('vote', 'up');
 
       const { count: down } = await supabaseClient
         .from('votes')
         .select('id', { count: 'exact', head: true })
-        .eq('song_id', id)
+        .eq('song_id', songId)
         .eq('vote', 'down');
 
-      const score = (up || 0) - (down || 0);
-      el.textContent = score > 0 ? `+${score}` : `${score}`;
-    } catch {
-      el.textContent = '';
+      el.textContent = `👍 ${up || 0}  👎 ${down || 0}`;
+    } catch (err) {
+      console.error('Failed to fetch vote counts', err);
+      el.textContent = 'Votes unavailable';
     }
   }
 });
