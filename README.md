@@ -35,3 +35,31 @@ the following columns:
 
 Row level security must permit anonymous `select` and `insert` operations on
 this table so visitors can vote without signing in.
+
+### Creating the table and policies
+
+Paste the following commands into the SQL editor of your Supabase project:
+
+```sql
+create table if not exists votes (
+  id bigserial primary key,
+  song_id integer not null,
+  vote text not null
+);
+
+alter table votes enable row level security;
+
+create policy "Public read" on votes
+  for select using (true);
+
+create policy "Public insert" on votes
+  for insert with check (true);
+```
+
+### Allowing web origins
+
+In the Supabase dashboard open **Project Settings → API → CORS** and add the
+origins for your site. Include your GitHub Pages domain (e.g.
+`https://<username>.github.io`) and `http://localhost:8000` for local
+development. This allows anonymous requests from the site to access the `votes`
+table.
