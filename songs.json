@@ -1,45 +1,54 @@
 [
     {
+        "id": 1,
         "title": "please don't wake me up",
         "audioFile": "please-dont-wake-me-up.mp3",
         "description": "<em>includes a remake of Claude Debussy's \"Clair De Lune\" in the style of Janelle Monae's \"Say You'll Go\"</em><br>as the orchestra rehearses for the concert, the musicians drift into fleeting daydreams, glimpses into alternate ways their instruments could sound, challenging their structured world. the orchestra drifts from strict compositions into something elusive. classical discipline blurs into saxophone trills and swelling strings, jazz drums punctuate old melodies, and familiar notes reappear reshaped — half-formed, half-realised. beneath precision, the musicians glimpse possibilities they can't yet articulate."
     },
     {
+        "id": 2,
         "title": "la última quedada del verano",
         "audioFile": "la-ultima-quedada-del-verano.mp3",
         "description": "<em>includes a remake of Louis Armstrong, Ella Fitzgerald's \"Summertime\"</em><br>away from the conductor's surveillance, around a dying summer fire, the musicians speak softly with flamenco guitars and muted trumpets. nostalgia drips into rhythms tinged darker than anyone remembered. the orchestra realises collectively that they're crossing a subtle boundary and there is no turning back now."
     },
     {
+        "id": 3,
         "title": "the pit goes rogue",
         "audioFile": "the-pit-goes-rogue.mp3",
         "description": "mid-performance, the rebellion arrives subtly, then unmistakably. one by one, musicians abandon predetermined structures, instruments step out of line, tentatively, then disregarding expectations entirely. chaos unfolds and something else emerges – indulgent, defiant, and completely unconcerned with acceptance."
     },
     {
+        "id": 4,
         "title": "hurry, or we'll miss the train",
         "audioFile": "hurry-or-well-miss-the-train.mp3",
         "description": "it's time to go. percussion drives urgency, brass bellows defiantly. the musicians grab their instruments, and move decisively, leaving hesitation behind. as the train steams ahead, sounds collide deliberately, confident and unapologetic, racing forward to unknown places."
     },
     {
+        "id": 5,
         "title": "play it like we're alone",
         "audioFile": "play-it-like-were-alone.mp3",
         "description": "<em>remake of Claudja Barry's \"Love for the Sake of Love\"</em><br>now fully immersed in newfound freedom, the orchestra experiments openly. strange, dark, compelling, yet somehow familiar sounds fill the air. the audience is bewildered but the musicians continue to play as if they're not there – awkwardly at first, then with confidence in their passion, leaving the concert in disarray."
     },
     {
+        "id": 6,
         "title": "thaw",
         "audioFile": "thaw.mp3",
         "description": "<em>remake of Madonna's \"Frozen\"</em><br>the conductor doesn't notice, but the cold rigidity begins to loosen. carefully held notes subtly melt, sliding unexpectedly into places they shouldn't fit but somehow belong. something's shifting beneath the controlled surface and each musician can feel it as they play. The shift is tentative, but irreversible."
     },
     {
+        "id": 7,
         "title": "childhood's end",
         "audioFile": "childhoods-end.mp3",
         "description": "<em>remake of Mary Mary's \"Still My Child (Interlude)\"</em><br>the concert begins as planned, but the overture is heavy and reflective. the musicians quietly mourn a past they're now ready to leave. orchestral strings trace memories softly, nostalgic yet certain. their decision feels clear, inevitable. it's a quiet farewell."
     },
     {
+        "id": 8,
         "title": "the last straw",
         "audioFile": "the-last-straw.mp3",
         "description": "determined, the musicians boldly confront the battle that awaits them. fierce brass lead a rhythmic march. anger distilled into clear, unwavering purpose. the instruments now speak collectively—clear, strong, uncompromising. their war cry is impossible to ignore."
     },
     {
+        "id": 9,
         "title": "the great escape",
         "audioFile": "the-great-escape.mp3",
         "description": "finally, the musicians stand at the edge of an epic confrontation. the journey culminates dramatically. a deep, orchestral struggle between fear and hope, order and chaos. the battle concludes unresolved yet open-ended, boundaries dissolved. something entirely new begins, quietly powerful, born from authenticity and brave uncertainty."

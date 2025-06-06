@@ -2,10 +2,7 @@
 
 ## Configuration
 
-The GitHub Pages workflow automatically generates `config.js` using the
-`SUPABASE_URL` and `SUPABASE_KEY` secrets stored in the repository. During
-deployment these values are written to `config.js` so the site has access to the
-necessary credentials without committing them to source control.
+The file `config.js` must be created manually. Copy `config.example.js` to `config.js` and fill in your Supabase URL and public anon key. Commit `config.js` to the repo so GitHub Pages can serve it.
 
 For local development you can still create `config.js` manually. Copy
 `config.example.js` to `config.js` and fill in your own Supabase URL and key.
@@ -44,7 +41,8 @@ Paste the following commands into the SQL editor of your Supabase project:
 create table if not exists votes (
   id bigserial primary key,
   song_id integer not null,
-  vote text not null
+  vote text not null check(vote in ('up','down')),
+  created_at timestamp default now()
 );
 
 alter table votes enable row level security;
@@ -58,8 +56,4 @@ create policy "Public insert" on votes
 
 ### Allowing web origins
 
-In the Supabase dashboard open **Project Settings → API → CORS** and add the
-origins for your site. Include your GitHub Pages domain (e.g.
-`https://<username>.github.io`) and `http://localhost:8000` for local
-development. This allows anonymous requests from the site to access the `votes`
-table.
+GitHub Pages will serve `config.js` containing your Supabase credentials. Ensure the root domain (`https://<username>.github.io`) is allowed in your Supabase project's CORS settings if using a paid plan. For free plans, Supabase's default CORS policy should accept requests.
