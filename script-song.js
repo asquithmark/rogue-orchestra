@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${m}:${s}`;
   }
 
-  async function updateVoteCounts(songId) {
+  async function updateVoteScore(songId) {
     if (!window.supabaseClient) {
       voteCounts.textContent = '';
       return;
@@ -78,10 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .eq('song_id', songId)
         .eq('vote', 'down');
 
-      voteCounts.textContent = `👍 ${up || 0}  👎 ${down || 0}`;
+      const score = (up || 0) - (down || 0);
+      voteCounts.textContent = `score: ${score >= 0 ? '+' : ''}${score}`;
     } catch (err) {
       console.error('vote count fetch failed', err);
-      voteCounts.textContent = '';
+      voteCounts.textContent = 'Votes unavailable';
     }
   }
 
@@ -116,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* voting */
     voteUp.dataset.song   = i;
     voteDown.dataset.song = i;
-    updateVoteCounts(i);
+    updateVoteScore(i);
 
     /* Media Session */
     if ('mediaSession' in navigator) {
@@ -192,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!window.supabaseClient) return;
       try {
         await supabaseClient.from('votes').insert({ song_id: songId, vote: btn.dataset.vote });
-        updateVoteCounts(songId);
+        updateVoteScore(songId);
       } catch (err) {
         console.error('vote insert failed', err);
       }
