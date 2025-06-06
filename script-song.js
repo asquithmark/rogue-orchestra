@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // VOTING SETUP
-  const voteContainer = document.createElement('div');
+  const voteContainer = document.getElementById('voteSection');
   voteContainer.className = 'vote-container';
 
   const voteUp = document.createElement('button');
@@ -151,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
   voteContainer.appendChild(voteUp);
   voteContainer.appendChild(voteDown);
   voteContainer.appendChild(voteCounts);
-  audio.parentNode.insertBefore(voteContainer, audio.nextSibling);
 
   async function updateVoteCounts(songId) {
     if (!window.supabaseClient) {
