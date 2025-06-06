@@ -2,7 +2,13 @@
 
 ## Configuration
 
-Copy `config.example.js` to `config.js` and replace the placeholder values with your own Supabase project credentials. The site expects `config.js` to define `SUPABASE_URL` and `SUPABASE_KEY` constants used by the client scripts.
+The GitHub Pages workflow automatically generates `config.js` using the
+`SUPABASE_URL` and `SUPABASE_KEY` secrets stored in the repository. During
+deployment these values are written to `config.js` so the site has access to the
+necessary credentials without committing them to source control.
+
+For local development you can still create `config.js` manually. Copy
+`config.example.js` to `config.js` and fill in your own Supabase URL and key.
 
 ## Running tests
 
