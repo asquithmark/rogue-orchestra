@@ -1,0 +1,2 @@
+const SUPABASE_URL = 'https://yvlicdoopdbidsdcildo.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2bGljZG9vcGRiaWRzZGNpbGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyMDE5ODAsImV4cCI6MjA2NDc3Nzk4MH0.Nc4aMK-6UQCrqhAhtM4Twa4CCV10YL9nAkLsOVE4t8c';
