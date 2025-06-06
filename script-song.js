@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
     container.classList.remove('pop-in');
     void container.offsetWidth;
     container.classList.add('pop-in');
+    voteUp.dataset.song = i;
+    voteDown.dataset.song = i;
+    updateVoteCounts(i);
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: song.title,
@@ -174,12 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  updateVoteCounts(index);
-
   [voteUp, voteDown].forEach(button => {
     button.addEventListener('click', async () => {
-      await supabaseClient.from('votes').insert({ song_id: index, vote: button.dataset.vote });
-      updateVoteCounts(index);
+      const songId = parseInt(button.dataset.song);
+      await supabaseClient.from('votes').insert({ song_id: songId, vote: button.dataset.vote });
+      updateVoteCounts(songId);
     });
   });
 });
