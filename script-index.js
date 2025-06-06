@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .eq('vote', 'down');
 
       const score = (up || 0) - (down || 0);
-      el.textContent = `score: ${score >= 0 ? '+' : ''}${score}`;
+      el.textContent = `${score >= 0 ? '+' : ''}${score}`;
     } catch (err) {
       console.error('Failed to fetch vote counts', err);
       el.textContent = 'Votes unavailable';

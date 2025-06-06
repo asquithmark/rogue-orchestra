@@ -195,6 +195,11 @@ body {
   margin-top: 0.5rem;
 }
 
+body:not(.light-mode) .toggle-description,
+body:not(.light-mode) .back-link {
+  color: #fff;
+}
+
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -254,6 +259,11 @@ body {
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
+}
+
+.feedback-header {
+  margin-top: 1rem;
+  font-weight: bold;
 }
 
 .vote-btn {
