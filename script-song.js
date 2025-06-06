@@ -131,13 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
   voteContainer.className = 'vote-container';
 
   const voteUp = document.createElement('button');
-  voteUp.textContent = '👍';
+  voteUp.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>';
   voteUp.className = 'vote-btn';
   voteUp.dataset.song = index;
   voteUp.dataset.vote = 'up';
 
   const voteDown = document.createElement('button');
-  voteDown.textContent = '👎';
+  voteDown.innerHTML = '<i class="fa-regular fa-thumbs-down"></i>';
   voteDown.className = 'vote-btn';
   voteDown.dataset.song = index;
   voteDown.dataset.vote = 'down';
@@ -151,6 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
   audio.parentNode.insertBefore(voteContainer, audio.nextSibling);
 
   async function updateVoteCounts(songId) {
+    if (!window.supabaseClient) {
+      voteCounts.textContent = '';
+      return;
+    }
     try {
       const { count: up } = await supabaseClient
         .from('votes')
@@ -166,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       voteCounts.textContent = `👍 ${up || 0}  👎 ${down || 0}`;
     } catch {
-      voteCounts.textContent = 'Votes unavailable';
+      voteCounts.textContent = '';
     }
   }
 

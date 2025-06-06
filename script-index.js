@@ -1,65 +1,85 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const list = document.getElementById('trackList');
-  const songs = await fetch('songs.json').then(r => r.json());
+document.addEventListener('DOMContentLoaded', () => {
+  const trackListContainer = document.getElementById('trackList');
+  const introPopup = document.getElementById('introPopup');
+  const continueToSongBtn = document.getElementById('continueToSongBtn');
+  const albumDesc = document.getElementById('albumDescription');
+  const toggleAlbumDesc = document.getElementById('toggleAlbumDescription');
+  let pendingSongUrl = '';
 
-  songs.forEach((song, idx) => {
-    const row = document.createElement('div');
-    row.className = 'track-row';
+  fetch('songs.json')
+    .then(r => r.json())
+    .then(async data => {
+      for (const [index, song] of data.entries()) {
+        const row = document.createElement('div');
+        row.className = 'track-row';
 
-    const link = document.createElement('a');
-    link.href = `song.html?song=${idx}`;
-    link.textContent = song.title;
-    link.className = 'track-button';
+        const link = document.createElement('a');
+        link.href = `song.html?song=${index}`;
+        link.textContent = song.title;
+        link.className = 'track-button';
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (!localStorage.getItem('introShown')) {
+            pendingSongUrl = link.href;
+            introPopup.style.display = 'flex';
+            localStorage.setItem('introShown', 'true');
+          } else {
+            window.location.href = link.href;
+          }
+        });
 
-    const voteContainer = document.createElement('div');
-    voteContainer.className = 'vote-container';
+        const scoreEl = document.createElement('span');
+        scoreEl.className = 'track-score';
+        row.appendChild(link);
+        row.appendChild(scoreEl);
+        trackListContainer.appendChild(row);
 
-    const voteUp = document.createElement('button');
-    voteUp.textContent = '👍';
-    voteUp.className = 'vote-btn';
-    voteUp.dataset.song = idx;
-    voteUp.dataset.vote = 'up';
-
-    const voteDown = document.createElement('button');
-    voteDown.textContent = '👎';
-    voteDown.className = 'vote-btn';
-    voteDown.dataset.song = idx;
-    voteDown.dataset.vote = 'down';
-
-    const voteCounts = document.createElement('span');
-    voteCounts.className = 'vote-counts';
-
-    voteContainer.append(voteUp, voteDown, voteCounts);
-    row.append(link, voteContainer);
-    list.appendChild(row);
-
-    updateVoteCounts(idx, voteCounts);
-
-    [voteUp, voteDown].forEach(btn => {
-      btn.addEventListener('click', async () => {
-        await supabaseClient.from('votes').insert({ song_id: idx, vote: btn.dataset.vote });
-        updateVoteCounts(idx, voteCounts);
-      });
+        updateScore(index, scoreEl);
+      }
     });
+
+  continueToSongBtn.addEventListener('click', () => {
+    if (pendingSongUrl) {
+      window.location.href = pendingSongUrl;
+    }
   });
 
-  async function updateVoteCounts(songId, el) {
+  introPopup.addEventListener('click', (e) => {
+    if (e.target === introPopup) {
+      introPopup.style.display = 'none';
+      pendingSongUrl = '';
+    }
+  });
+
+  if (toggleAlbumDesc) {
+    toggleAlbumDesc.addEventListener('click', () => {
+      albumDesc.classList.toggle('collapsed');
+      toggleAlbumDesc.textContent = albumDesc.classList.contains('collapsed') ? 'show more' : 'show less';
+    });
+  }
+
+  async function updateScore(id, el) {
+    if (!window.supabaseClient) {
+      el.textContent = '';
+      return;
+    }
     try {
       const { count: up } = await supabaseClient
         .from('votes')
         .select('id', { count: 'exact', head: true })
-        .eq('song_id', songId)
+        .eq('song_id', id)
         .eq('vote', 'up');
 
       const { count: down } = await supabaseClient
         .from('votes')
         .select('id', { count: 'exact', head: true })
-        .eq('song_id', songId)
+        .eq('song_id', id)
         .eq('vote', 'down');
 
-      el.textContent = `👍 ${up || 0}  👎 ${down || 0}`;
+      const score = (up || 0) - (down || 0);
+      el.textContent = score > 0 ? `+${score}` : `${score}`;
     } catch {
-      el.textContent = 'Votes unavailable';
+      el.textContent = '';
     }
   }
 });

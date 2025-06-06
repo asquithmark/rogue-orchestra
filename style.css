@@ -68,6 +68,7 @@ body {
 
 .track-button {
   display: block;
+  flex: 1;
   padding: 0.75rem 1rem;
   margin: 0.5rem 0;
   color: var(--text-color);
@@ -262,11 +263,19 @@ body {
   cursor: pointer;
   font-size: 1rem;
 }
+.vote-btn i {
+  pointer-events: none;
+}
 .vote-btn:hover {
   background: rgba(255,255,255,0.3);
 }
 
 .vote-counts {
+  font-size: 0.9rem;
+}
+
+.track-score {
+  margin-left: 0.5rem;
   font-size: 0.9rem;
 }
 
