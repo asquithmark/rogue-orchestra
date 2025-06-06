@@ -1,3 +1,6 @@
+import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 document.addEventListener('DOMContentLoaded', () => {
   /* -------- URL & DOM refs -------- */
   const params          = new URLSearchParams(window.location.search);
@@ -72,30 +75,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  async function updateVoteScore(songId) {
-    if (!window.supabaseClient) {
-      voteCounts.textContent = '';
-      return;
-    }
-    try {
-      const { count: up } = await supabaseClient
-        .from('votes')
-        .select('id', { count: 'exact', head: true })
-        .eq('song_id', songId)
-        .eq('vote', 'up');
+  async function submitVote(songId, vote) {
+    const { error } = await supabase
+      .from('votes')
+      .insert({ song_id: songId, vote });
+    if (error) { console.error(error); return; }
+    await refreshScore(songId);
+  }
 
-      const { count: down } = await supabaseClient
-        .from('votes')
-        .select('id', { count: 'exact', head: true })
-        .eq('song_id', songId)
-        .eq('vote', 'down');
+  async function refreshScore(songId) {
+    const { count: ups } = await supabase
+      .from('votes')
+      .select('*', { head: true, count: 'exact' })
+      .eq('song_id', songId)
+      .eq('vote', 'up');
 
-      const score = (up || 0) - (down || 0);
-      voteCounts.textContent = `${score >= 0 ? '+' : ''}${score}`;
-    } catch (err) {
-      console.error('vote count fetch failed', err);
-      voteCounts.textContent = 'Votes unavailable';
-    }
+    const { count: downs } = await supabase
+      .from('votes')
+      .select('*', { head: true, count: 'exact' })
+      .eq('song_id', songId)
+      .eq('vote', 'down');
+
+    document.querySelector(`[data-score="${songId}"]`).textContent = ups - downs;
   }
 
   function loadSong(i) {
@@ -129,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /* voting */
     voteUp.dataset.song   = i;
     voteDown.dataset.song = i;
-    updateVoteScore(i);
+    voteCounts.dataset.score = i;
+    refreshScore(i);
 
     /* Media Session */
     if ('mediaSession' in navigator) {
@@ -211,13 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
   [voteUp, voteDown].forEach(btn => {
     btn.addEventListener('click', async () => {
       const songId = parseInt(btn.dataset.song, 10);
-      if (!window.supabaseClient) return;
-      try {
-        await supabaseClient.from('votes').insert({ song_id: songId, vote: btn.dataset.vote });
-        updateVoteScore(songId);
-      } catch (err) {
-        console.error('vote insert failed', err);
-      }
+      await submitVote(songId, btn.dataset.vote);
     });
   });
+
+  supabase.channel('votes')
+    .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'votes' },
+        payload => refreshScore(payload.new.song_id))
+    .subscribe();
 });
