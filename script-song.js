@@ -47,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(songs => {
       songsData = songs;
       loadSong(index);
-      audio.play();
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      tryPlay();
     })
     .catch(err => console.error('songs.json fetch failed', err));
 
@@ -58,6 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
+  }
+
+  function tryPlay() {
+    const p = audio.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      }).catch(() => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      });
+    } else {
+      playPauseBtn.innerHTML = audio.paused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
+    }
   }
 
   async function updateVoteScore(songId) {
@@ -133,8 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* -------- player controls -------- */
   playPauseBtn.addEventListener('click', () => {
     if (audio.paused) {
-      audio.play();
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      tryPlay();
     } else {
       audio.pause();
       playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -145,16 +156,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!songsData.length) return;
     index = (index - 1 + songsData.length) % songsData.length;
     loadSong(index);
-    audio.play();
-    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    tryPlay();
   });
 
   nextBtn.addEventListener('click', () => {
     if (!songsData.length) return;
     index = (index + 1) % songsData.length;
     loadSong(index);
-    audio.play();
-    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    tryPlay();
   });
 
   if ('mediaSession' in navigator) {
@@ -181,8 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (index < songsData.length - 1) {
       index += 1;
       loadSong(index);
-      audio.play();
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      tryPlay();
     } else {
       playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
     }
