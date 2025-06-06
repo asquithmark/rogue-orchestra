@@ -1,3 +1,6 @@
+import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 document.addEventListener('DOMContentLoaded', async () => {
   const trackListContainer = document.getElementById('trackList');
   const introPopup        = document.getElementById('introPopup');
@@ -39,10 +42,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* vote score */
     const scoreEl = document.createElement('span');
     scoreEl.className = 'track-score';
+    scoreEl.dataset.score = idx;
     row.append(link, scoreEl);
     trackListContainer.appendChild(row);
 
-    updateScore(idx, scoreEl);
+    refreshScore(idx);
   });
 
   /* ---------- intro popup handlers ---------- */
@@ -70,29 +74,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /* ---------- helpers ---------- */
-  async function updateScore(songId, el) {
-    if (!window.supabaseClient) {
-      el.textContent = '';
-      return;
-    }
-    try {
-      const { count: up } = await supabaseClient
-        .from('votes')
-        .select('id', { count: 'exact', head: true })
-        .eq('song_id', songId)
-        .eq('vote', 'up');
-
-      const { count: down } = await supabaseClient
-        .from('votes')
-        .select('id', { count: 'exact', head: true })
-        .eq('song_id', songId)
-        .eq('vote', 'down');
-
-      const score = (up || 0) - (down || 0);
-      el.textContent = `${score >= 0 ? '+' : ''}${score}`;
-    } catch (err) {
-      console.error('Failed to fetch vote counts', err);
-      el.textContent = 'Votes unavailable';
-    }
+  async function submitVote(songId, vote) {
+    const { error } = await supabase
+      .from('votes')
+      .insert({ song_id: songId, vote });
+    if (error) { console.error(error); return; }
+    await refreshScore(songId);
   }
+
+  async function refreshScore(songId) {
+    const { count: ups } = await supabase
+      .from('votes')
+      .select('*', { head: true, count: 'exact' })
+      .eq('song_id', songId)
+      .eq('vote', 'up');
+
+    const { count: downs } = await supabase
+      .from('votes')
+      .select('*', { head: true, count: 'exact' })
+      .eq('song_id', songId)
+      .eq('vote', 'down');
+
+    document.querySelector(`[data-score="${songId}"]`).textContent = ups - downs;
+  }
+
+  supabase.channel('votes')
+    .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'votes' },
+        payload => refreshScore(payload.new.song_id))
+    .subscribe();
 });
