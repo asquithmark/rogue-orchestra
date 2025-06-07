@@ -10,7 +10,7 @@
 <body>
   <button id="themeSwitcherBtn" class="theme-btn"><i class="fas fa-moon"></i></button>
   <div id="song-container" data-song-id="123" class="container pop-in">
-  <a href="../index.html" id="backLink" class="back-link">← back to album</a>
+    <a href="../index.html" id="backLink" class="back-link">← back to album</a>
     <h1 class="title">the rogue orchestra</h1>
     <img src="../assets/album.gif" alt="Album art" id="albumArt">
     <h2 id="songTitle" class="song-title"></h2>
@@ -31,12 +31,11 @@
     <audio id="audioPlayer"></audio>
     <p class="feedback-header">leave your feedback</p>
     <div class="voting">
-      <button class="vote" data-vote="up" data-song-id="123">👍</button>
+      <button class="vote" data-vote="up">👍</button>
       <span class="track-score" data-score>0</span>
-      <button class="vote" data-vote="down" data-song-id="123">👎</button>
+      <button class="vote" data-vote="down">👎</button>
     </div>
   </div>
-  <!-- Pin Supabase to a specific UMD build so the global `supabase` object is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../theme-switcher.js"></script>
   <script type="module" src="script-song.js"></script>
