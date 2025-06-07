@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Song</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <button id="themeSwitcherBtn" class="theme-btn"><i class="fas fa-moon"></i></button>
   <div id="song-container" data-song-id="123" class="container pop-in">
-    <a href="./index.html" id="backLink" class="back-link">← back to album</a>
+  <a href="../index.html" id="backLink" class="back-link">← back to album</a>
     <h1 class="title">the rogue orchestra</h1>
-    <img src="assets/album.gif" alt="Album art" id="albumArt">
+    <img src="../assets/album.gif" alt="Album art" id="albumArt">
     <h2 id="songTitle" class="song-title"></h2>
     <p id="songIntro" class="intro"></p>
     <h3 class="artist">the rogue orchestra</h3>
@@ -38,7 +38,7 @@
   </div>
   <!-- Pin Supabase to a specific UMD build so the global `supabase` object is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="theme-switcher.js"></script>
+  <script src="../theme-switcher.js"></script>
   <script type="module" src="script-song.js"></script>
 </body>
 </html>
