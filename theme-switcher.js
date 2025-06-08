@@ -7,14 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (theme === 'light') {
             body.classList.add('light-mode');
             if (icon) { // Ensure icon exists
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
             }
         } else {
             body.classList.remove('light-mode');
             if (icon) { // Ensure icon exists
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
             }
         }
     };
