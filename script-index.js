@@ -30,7 +30,10 @@ async function loadTrackList() {
 
     songs.forEach(song => {
       const li = document.createElement('li');
-      li.classList.add('track-item');
+li.classList.add('track-item');
+      
+      // Set the animation delay for the staggered effect
+      li.style.setProperty('--delay', `${index * 0.07}s`);
 
       // The <a> tag acts as the container for the title and score.
       const a = document.createElement('a');
