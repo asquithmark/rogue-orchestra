@@ -1,4 +1,4 @@
-/* style.css - Definitive Mobile-First Version for Rogue Orchestra */
+/* style.css - Final Version with Popup Styles */
 
 :root {
   /* --- Dark Mode (Default) --- */
@@ -357,4 +357,57 @@ h2 {
   max-height: 4.5em; /* Adjust as needed */
   overflow: hidden;
   position: relative;
+}
+
+/* --- Popup Overlay --- */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  display: none; /* Hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fade-in 0.5s ease;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.popup-content {
+  background: var(--card-bg);
+  border-radius: 28px;
+  padding: 2rem;
+  max-width: 400px;
+  text-align: center;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 16px 40px 0 var(--shadow-color);
+}
+
+.popup-content p {
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+    color: var(--text-color-muted);
+}
+
+.popup-content button {
+  background: var(--accent-color);
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.popup-content button:hover {
+    transform: scale(1.05);
 }
