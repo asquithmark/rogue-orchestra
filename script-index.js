@@ -1,4 +1,4 @@
-// script-index.js - Corrected and Final Version
+// script-index.js - Final Version with Popup Logic
 
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
 
@@ -94,8 +94,7 @@ function subscribeToVotes() {
       'postgres_changes',
       { event: '*', schema: 'public', table: 'votes' },
       (payload) => {
-        // When any vote changes, refresh the score for the affected song
-        const songId = payload.new.song_id || payload.old.song_id;
+        const songId = payload.new?.song_id || payload.old?.song_id;
         if (songId) {
           refreshScore(songId);
         }
@@ -108,6 +107,23 @@ function subscribeToVotes() {
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Popup Logic ---
+  const popup = document.getElementById('introPopup');
+  const continueBtn = document.getElementById('continueToSongBtn');
+
+  if (popup && continueBtn) {
+      // Show popup only if the user hasn't seen it before
+      if (!localStorage.getItem('hasSeenIntroPopup')) {
+          popup.style.display = 'flex';
+      }
+
+      continueBtn.addEventListener('click', () => {
+          popup.style.display = 'none';
+          localStorage.setItem('hasSeenIntroPopup', 'true');
+      });
+  }
+
+  // --- Load Content ---
   loadTrackList();
   subscribeToVotes();
 });
