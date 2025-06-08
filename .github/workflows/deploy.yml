@@ -25,12 +25,15 @@ jobs:
       - run: npm test
       - run: |
           rm -rf dist && mkdir dist
+          echo "export const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > dist/config.js
+          echo "export const SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}';" >> dist/config.js
           cp index.html               dist/
           cp style.css                dist/
-          cp config.js                dist/
           cp script-index.js          dist/
+          cp script-song.js           dist/
           cp songs.json               dist/
           cp supabaseClient.js        dist/
+          cp theme-switcher.js        dist/
           cp -R song/                 dist/song/
           cp -R assets/               dist/assets/
           touch dist/.nojekyll
