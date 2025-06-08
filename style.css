@@ -1,81 +1,144 @@
-/* style.css - Updated for Vision OS / Glassmorphic Style */
+/* style.css - Definitive Mobile-First Version for Rogue Orchestra */
 
 :root {
   /* --- Dark Mode (Default) --- */
-  --bg-gradient-start: #1d2b3a; /* Dark blue-gray */
-  --bg-gradient-end: #0f172a;   /* Deeper blue-slate */
-  --card-bg: rgba(30, 41, 59, 0.4); /* Semi-transparent dark slate */
-  --card-border: rgba(255, 255, 255, 0.15); /* Faint white border */
-  --text-color: #f8fafc;        /* Off-white for readability */
-  --accent-color: #38bdf8;      /* Bright sky blue for accents */
-  --shadow-color: rgba(0, 0, 0, 0.3);
-
-  /* --- Light Mode --- */
-  --light-bg-gradient-start: #f0f9ff; /* Very light sky blue */
-  --light-bg-gradient-end: #e0f2fe;   /* Light sky blue */
-  --light-card-bg: rgba(255, 255, 255, 0.4); /* Semi-transparent white */
-  --light-card-border: rgba(0, 0, 0, 0.1);    /* Faint dark border */
-  --light-text-color: #0f172a;          /* Dark slate for text */
-  --light-accent-color: #0ea5e9;       /* Stronger sky blue */
-  --light-shadow-color: rgba(0, 0, 0, 0.1);
+  --bg-gradient-start: #000000; /* Black */
+  --bg-gradient-end: #134e4a;   /* Dark Turquoise/Teal */
+  --card-bg: rgba(20, 20, 20, 0.5); /* Darker, less blue card */
+  --card-border: rgba(255, 255, 255, 0.1);
+  --text-color: #f8fafc;
+  --text-color-muted: rgba(248, 250, 252, 0.6);
+  --accent-color: #14b8a6;      /* Vibrant Dark Turquoise */
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --aurora-color-1: hsla(175, 100%, 30%, 0.3);
+  --aurora-color-2: hsla(212, 100%, 40%, 0.2);
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--text-color);
   background: linear-gradient(to bottom right, var(--bg-gradient-start), var(--bg-gradient-end));
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem; /* Better for mobile */
+  box-sizing: border-box;
   transition: background 0.5s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Animated Aurora Background */
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: radial-gradient(circle at var(--x) var(--y), var(--aurora-color-1) 0%, transparent 40%);
+    animation: move-aurora 20s linear infinite;
+}
+
+body::after {
+    --aurora-color-1: var(--aurora-color-2);
+    animation-delay: -10s;
+    animation-duration: 25s;
+}
+
+@keyframes move-aurora {
+    0% { --x: 10%; --y: 10%; }
+    25% { --x: 90%; --y: 80%; }
+    50% { --x: 20%; --y: 90%; }
+    75% { --x: 80%; --y: 20%; }
+    100% { --x: 10%; --y: 10%; }
 }
 
 body.light-mode {
-  --bg-gradient-start: var(--light-bg-gradient-start);
-  --bg-gradient-end: var(--light-bg-gradient-end);
-  --card-bg: var(--light-card-bg);
-  --card-border: var(--light-card-border);
-  --text-color: var(--light-text-color);
-  --accent-color: var(--light-accent-color);
-  --shadow-color: var(--light-shadow-color);
+  --bg-gradient-start: #f0f9ff;
+  --bg-gradient-end: #a5f3fc;
+  --card-bg: rgba(255, 255, 255, 0.5);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --text-color: #0f172a;
+  --text-color-muted: rgba(15, 23, 42, 0.6);
+  --accent-color: #0d9488;
+  --shadow-color: rgba(100, 116, 139, 0.2);
 }
 
 /* --- The Main Container --- */
 .container {
   width: 100%;
-  max-width: 450px;
-  background: var(--card-bg); /* Semi-transparent background */
-  border-radius: 24px; /* More pronounced rounded corners */
-  padding: 2rem;
-  border: 1px solid var(--card-border); /* Subtle border to catch light */
-  box-shadow: 0 8px 32px 0 var(--shadow-color); /* The "hover" shadow */
-  backdrop-filter: blur(16px); /* The frosted glass effect! */
-  -webkit-backdrop-filter: blur(16px); /* For Safari compatibility */
-  transition: all 0.3s ease;
+  max-width: 500px;
+  background: var(--card-bg);
+  border-radius: 28px;
+  padding: 2rem 1.5rem; /* Adjusted padding for mobile */
+  box-shadow: 0 16px 40px 0 var(--shadow-color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  /* Animated Gradient Border */
+  border: 1px solid transparent;
+  background-clip: padding-box;
 }
 
-.title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+.container::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -1;
+    margin: -1px; /* Border width */
+    border-radius: inherit; /* Inherit border-radius */
+    background: linear-gradient(120deg, var(--accent-color), var(--card-border), var(--accent-color));
+    background-size: 300% 300%;
+    animation: flow-gradient 8s ease infinite;
 }
 
-#albumArt, .album-info img {
+@keyframes flow-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.album-info img, #albumArt {
   width: 100%;
-  border-radius: 16px; /* Rounded corners for the album art */
-  box-shadow: 0 4px 15px var(--shadow-color);
+  border-radius: 18px;
   margin-bottom: 1rem;
 }
 
-/* --- Tracklist on Index Page --- */
+.title {
+  font-weight: 500;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+h2 {
+    font-weight: 500;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+/* --- Tracklist Page --- */
 .track-list {
   list-style: none;
   padding: 0;
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 0 0;
+}
+
+.track-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-in-up 0.5s ease-out forwards;
+    animation-delay: var(--delay, 0s);
+}
+
+@keyframes fade-in-up {
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .track-item a {
@@ -86,29 +149,80 @@ body.light-mode {
   margin-bottom: 0.75rem;
   color: var(--text-color);
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.05); /* Very subtle inner highlight */
-  border-radius: 16px; /* Rounded track items */
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .track-item a:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px) scale(1.02); /* Lift on hover */
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.track-item a:active {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .track-score {
   font-size: 0.9rem;
   font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  border-radius: 8px;
-  background: var(--accent-color);
-  color: var(--light-text-color);
+  padding: 0.3rem 0.7rem;
+  border-radius: 10px;
+  color: var(--text-color);
   min-width: 20px;
   text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* --- Song Player Page --- */
+#songTitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 1rem 0 0.25rem 0;
+    text-align: center;
+}
 
-/* --- Player Controls on Song Page --- */
+.artist {
+    text-align: center;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+}
+
+.progress-container input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  outline: none;
+  overflow: hidden;
+}
+
+.progress-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-color);
+  cursor: pointer;
+  border: none;
+  box-shadow: -407px 0 0 400px var(--accent-color);
+}
+
 .controls {
   display: flex;
   justify-content: center;
@@ -137,46 +251,52 @@ body.light-mode {
   transform: scale(1.1);
 }
 
+.controls button:active {
+  transform: scale(1.0);
+}
+
 .controls button#playPauseBtn {
   width: 60px;
   height: 60px;
   font-size: 1.5rem;
   background: var(--accent-color);
-  color: var(--light-text-color);
+  color: #fff;
 }
 
-/* --- Progress Bar --- */
-.progress-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
+.feedback-header {
+    text-align: center;
+    margin-top: 2rem;
+    font-weight: 500;
+    opacity: 0.8;
 }
 
-.progress-container input[type="range"] {
-  flex: 1;
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  outline: none;
-  overflow: hidden;
+.voting {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
-.progress-container input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--text-color);
-  cursor: pointer;
-  box-shadow: -407px 0 0 400px var(--accent-color); /* Fills the track */
+.voting .vote {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
 }
 
-/* --- Theme Toggle Button --- */
+.voting .vote:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* --- Common Elements --- */
 .theme-btn {
   position: absolute;
   top: 1.5rem;
@@ -185,7 +305,6 @@ body.light-mode {
   height: 48px;
   z-index: 100;
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -204,17 +323,21 @@ body.light-mode {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Other minor styles for text and links */
 .description, #songDescription {
   margin-top: 1rem;
   line-height: 1.6;
   font-size: 0.95rem;
-  color: var(--text-color);
-  opacity: 0.8;
+  color: var(--text-color-muted);
+  text-align: center;
+}
+
+#songDescription {
+    text-align: left;
 }
 
 .toggle-description, .back-link {
-  display: inline-block;
+  display: block;
+  text-align: center;
   margin-top: 1rem;
   font-weight: 500;
   color: var(--accent-color);
@@ -222,6 +345,16 @@ body.light-mode {
   cursor: pointer;
 }
 
+.back-link {
+    text-align: left;
+}
+
 .toggle-description:hover, .back-link:hover {
   text-decoration: underline;
+}
+
+.collapsed {
+  max-height: 4.5em; /* Adjust as needed */
+  overflow: hidden;
+  position: relative;
 }
