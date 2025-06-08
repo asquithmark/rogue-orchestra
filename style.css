@@ -1,17 +1,17 @@
-/* style.css - Final Version with Scrolling Fix */
+/* style.css - Final Polished Version */
 
 :root {
-  /* --- Dark Mode (Default) --- */
+  /* --- Dark Mode (Default) - NEW DARKER PALETTE --- */
   --bg-gradient-start: #000000; /* Black */
-  --bg-gradient-end: #134e4a;   /* Dark Turquoise/Teal */
-  --card-bg: rgba(20, 20, 20, 0.5); /* Darker, less blue card */
+  --bg-gradient-end: #0d2424;   /* Deeper, less saturated turquoise */
+  --card-bg: rgba(20, 20, 20, 0.5); 
   --card-border: rgba(255, 255, 255, 0.1);
   --text-color: #f8fafc;
   --text-color-muted: rgba(248, 250, 252, 0.6);
-  --accent-color: #14b8a6;      /* Vibrant Dark Turquoise */
+  --accent-color: #4e6464;      /* NEW: Deep shade turquoise */
   --shadow-color: rgba(0, 0, 0, 0.4);
-  --aurora-color-1: hsla(175, 100%, 30%, 0.3);
-  --aurora-color-2: hsla(212, 100%, 40%, 0.2);
+  --aurora-color-1: hsla(180, 50%, 20%, 0.3);
+  --aurora-color-2: hsla(200, 50%, 30%, 0.2);
 }
 
 body {
@@ -23,10 +23,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem; /* Better for mobile */
+  padding: 1rem;
   box-sizing: border-box;
   transition: background 0.5s ease;
-  overflow-x: hidden; /* THE FIX: Prevents horizontal scroll but allows vertical */
+  overflow-x: hidden;
   position: relative;
 }
 
@@ -58,12 +58,12 @@ body::after {
 
 body.light-mode {
   --bg-gradient-start: #f0f9ff;
-  --bg-gradient-end: #a5f3fc;
+  --bg-gradient-end: #e2e8f0; /* Lighter, less saturated background */
   --card-bg: rgba(255, 255, 255, 0.5);
   --card-border: rgba(0, 0, 0, 0.1);
   --text-color: #0f172a;
   --text-color-muted: rgba(15, 23, 42, 0.6);
-  --accent-color: #0d9488;
+  --accent-color: #4e6464; /* Same deep shade for consistency */
   --shadow-color: rgba(100, 116, 139, 0.2);
 }
 
@@ -80,7 +80,7 @@ body.light-mode {
   position: relative;
   border: 1px solid transparent;
   background-clip: padding-box;
-  margin: 2rem 0; /* Add margin for scrolling space */
+  margin: 2rem 0;
 }
 
 .container::after {
@@ -108,7 +108,7 @@ body.light-mode {
 }
 
 .title {
-  font-weight: 500;
+  font-weight: 400; /* NEW: Thinner font weight */
   text-align: center;
   margin-top: 0;
   margin-bottom: 1.5rem;
@@ -152,6 +152,13 @@ h2 {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   transition: background 0.3s ease, transform 0.2s ease;
+  /* NEW: Subtle border and shadow to stand out */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+body.light-mode .track-item a {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .track-item a:hover {
@@ -180,8 +187,17 @@ h2 {
 #songTitle {
     font-size: 1.4rem;
     font-weight: 600;
-    margin: 1rem 0 0.25rem 0;
+    margin-top: 1.5rem; /* NEW: Adjusted margin */
+    margin-bottom: 0.25rem;
     text-align: center;
+}
+.back-link {
+    display: block;
+    margin-bottom: 0.5rem; /* NEW: Adjusted margin */
+    font-weight: 500;
+    color: var(--accent-color);
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .artist {
@@ -191,224 +207,4 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
-.progress-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  font-size: 0.8rem;
-}
-
-.progress-container input[type="range"] {
-  flex: 1;
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  outline: none;
-  overflow: hidden;
-}
-
-.progress-container input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--text-color);
-  cursor: pointer;
-  border: none;
-  box-shadow: -407px 0 0 400px var(--accent-color);
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.controls button {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 1.1rem;
-  color: var(--text-color);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.controls button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-
-.controls button:active {
-  transform: scale(1.0);
-}
-
-.controls button#playPauseBtn {
-  width: 60px;
-  height: 60px;
-  font-size: 1.5rem;
-  background: var(--accent-color);
-  color: #fff;
-}
-
-.feedback-header {
-    text-align: center;
-    margin-top: 2rem;
-    font-weight: 500;
-    opacity: 0.8;
-}
-
-.voting {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.voting .vote {
-    background: transparent;
-    border: 1px solid var(--card-border);
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    color: var(--text-color);
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.voting .vote:hover {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
-    transform: scale(1.1);
-}
-
-/* --- Common Elements --- */
-.theme-btn {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 48px;
-  height: 48px;
-  z-index: 100;
-  background: var(--card-bg);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--text-color);
-  box-shadow: 0 4px 15px var(--shadow-color);
-  transition: all 0.3s ease;
-}
-
-.theme-btn:hover {
-  transform: scale(1.1) rotate(15deg);
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.description, #songDescription {
-  margin-top: 1rem;
-  line-height: 1.6;
-  font-size: 0.95rem;
-  color: var(--text-color-muted);
-  text-align: center;
-}
-
-#songDescription {
-    text-align: left;
-}
-
-.toggle-description, .back-link {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  font-weight: 500;
-  color: var(--accent-color);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.back-link {
-    text-align: left;
-}
-
-.toggle-description:hover, .back-link:hover {
-  text-decoration: underline;
-}
-
-.collapsed {
-  max-height: 4.5em; /* Adjust as needed */
-  overflow: hidden;
-  position: relative;
-  transition: max-height 0.3s ease-out; /* Add transition */
-}
-
-/* --- Popup Overlay --- */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
-  display: none; /* Hidden by default */
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  animation: fade-in 0.5s ease;
-}
-
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.popup-content {
-  background: var(--card-bg);
-  border-radius: 28px;
-  padding: 2rem;
-  max-width: 400px;
-  text-align: center;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 16px 40px 0 var(--shadow-color);
-}
-
-.popup-content p {
-    margin: 0 0 1.5rem 0;
-    line-height: 1.6;
-    color: var(--text-color-muted);
-}
-
-.popup-content button {
-  background: var(--accent-color);
-  border: none;
-  border-radius: 50px;
-  padding: 0.75rem 1.5rem;
-  color: #fff;
-  cursor: pointer;
-  font-weight: 500;
-  transition: transform 0.2s ease;
-}
-
-.popup-content button:hover {
-    transform: scale(1.05);
-}
+.progress
