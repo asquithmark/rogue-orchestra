@@ -1,4 +1,4 @@
-// song/script-song.js - Final Polished Version
+// song/script-song.js - Final Polished Version v2
 
 import { SUPABASE_URL, SUPABASE_KEY } from '../config.js';
 
@@ -47,7 +47,6 @@ function loadSong(songId) {
   audioPlayer.src = `../assets/${song.audioFile}`;
   
   songContainer.dataset.songId = song.id;
-  document.querySelectorAll('.vote').forEach(btn => btn.dataset.songId = song.id);
   refreshScore(song.id);
 
   if ('mediaSession' in navigator) {
@@ -56,7 +55,8 @@ function loadSong(songId) {
       artist: 'the rogue orchestra',
       album: 'The Rogue Orchestra',
       artwork: [
-        { src: '../assets/album-art-512.png', sizes: '512x512', type: 'image/png' },
+        // FIX #2: Pointing to the real GIF file
+        { src: '../assets/album.gif', type: 'image/gif' },
       ]
     });
     navigator.mediaSession.setActionHandler('play', () => playSong());
@@ -107,15 +107,27 @@ function formatTime(seconds) {
 
 async function submitVote(songId, vote) {
   const { error } = await supabase.from('votes').insert({ song_id: songId, vote });
-  if (error) console.error('Insert error:', error);
-  else refreshScore(songId);
+  if (error) { 
+      console.error('Insert error:', error);
+  } else {
+      // If vote is successful, immediately refresh the score.
+      refreshScore(songId);
+  }
 }
 
 async function refreshScore(songId) {
-  const { count: ups } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'up');
-  const { count: downs } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'down');
-  const scoreSpan = document.querySelector('.track-score[data-score]');
-  if (scoreSpan) scoreSpan.textContent = (ups || 0) - (downs || 0);
+  // FIX #1: Using a much more specific selector to find the score element
+  const scoreSpan = document.querySelector('.voting .track-score');
+  if (!scoreSpan) return;
+
+  try {
+    const { count: ups } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'up');
+    const { count: downs } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'down');
+    scoreSpan.textContent = (ups || 0) - (downs || 0);
+  } catch (error) {
+      console.error('Error fetching score:', error);
+      scoreSpan.textContent = '-';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
