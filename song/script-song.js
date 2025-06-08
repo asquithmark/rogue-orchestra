@@ -1,6 +1,12 @@
 // song/script-song.js
 
 import { SUPABASE_URL, SUPABASE_KEY } from '../config.js';
+
+// Ensure Supabase credentials are loaded
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  throw new Error("Supabase credentials not found. Make sure config.js is present and correct.");
+}
+
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- DOM ELEMENTS ---
@@ -158,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Get song ID from URL
   const urlParams = new URLSearchParams(window.location.search);
-  const songId = parseInt(urlParams.get('id'));
+  const songId = parseInt(urlParams.get('id'), 10);
 
   if (songId && !isNaN(songId)) {
     loadSong(songId);
@@ -180,7 +186,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   audioPlayer.addEventListener('timeupdate', updateProgress);
   audioPlayer.addEventListener('ended', () => changeSong(1));
   progressBar.addEventListener('input', (e) => {
-    audioPlayer.currentTime = (e.target.value / 100) * audioPlayer.duration;
+    if (audioPlayer.duration) {
+      audioPlayer.currentTime = (e.target.value / 100) * audioPlayer.duration;
+    }
   });
 
   toggleDescription.addEventListener('click', () => {
