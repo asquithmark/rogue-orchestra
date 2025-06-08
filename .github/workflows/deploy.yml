@@ -17,30 +17,48 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm ci
-      - run: npm test
-      - run: |
-          rm -rf dist && mkdir dist
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build site
+        run: |
+          # Create the dist directory
+          rm -rf dist
+          mkdir dist
+
+          # Create the config file from secrets
           echo "export const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > dist/config.js
           echo "export const SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}';" >> dist/config.js
-          cp index.html               dist/
-          cp style.css                dist/
-          cp script-index.js          dist/
-          cp script-song.js           dist/
-          cp songs.json               dist/
-          cp supabaseClient.js        dist/
-          cp theme-switcher.js        dist/
-          cp -R song/                 dist/song/
-          cp -R assets/               dist/assets/
+
+          # Copy root files
+          cp index.html style.css script-index.js songs.json theme-switcher.js dist/
+
+          # Copy directories
+          cp -R song/ dist/song/
+          cp -R assets/ dist/assets/
+          
+          # Add .nojekyll file
           touch dist/.nojekyll
-      - uses: actions/configure-pages@v3
-      - uses: actions/upload-pages-artifact@v2
+        
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v2
         with:
           path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -48,5 +66,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - id: deploy
+      - name: Deploy to GitHub Pages
+        id: deploy
         uses: actions/deploy-pages@v2
