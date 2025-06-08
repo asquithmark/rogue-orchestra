@@ -15,32 +15,45 @@ async function loadTrackList() {
       return;
     }
 
-    // Clear existing list to avoid duplicates
-    trackList.innerHTML = '';
+    trackList.innerHTML = ''; // Clear existing list
 
     songs.forEach(song => {
       const li = document.createElement('li');
       li.classList.add('track-item');
 
+      // The link itself is the button
       const a = document.createElement('a');
-      // Add the 'track-button' class for styling
-      a.classList.add('track-button');
       a.href = `./song/song.html?id=${song.id}`;
+      a.classList.add('track-button'); // Apply button styling
 
+      // This div will contain the title and score
+      const trackRow = document.createElement('div');
+      trackRow.classList.add('track-row');
+
+      // Title span
       const titleSpan = document.createElement('span');
       titleSpan.textContent = song.title;
 
+      // Score span
       const scoreSpan = document.createElement('span');
       scoreSpan.classList.add('track-score');
       scoreSpan.setAttribute('data-score', song.id);
       scoreSpan.textContent = '0'; // Default score
 
-      a.appendChild(titleSpan);
-      a.appendChild(scoreSpan);
+      // Append title and score to the row
+      trackRow.appendChild(titleSpan);
+      trackRow.appendChild(scoreSpan);
+      
+      // Append the row to the link
+      a.appendChild(trackRow);
+      
+      // Append the link to the list item
       li.appendChild(a);
+      
+      // Append the list item to the main list
       trackList.appendChild(li);
 
-      // Refresh the score for this track
+      // Fetch the actual score
       refreshScore(song.id);
     });
   } catch (error) {
@@ -80,11 +93,11 @@ async function refreshScore(songId) {
   }
 }
 
-// On page load, load the track list and refresh scores
+// On page load, load the track list and subscribe to updates
 document.addEventListener('DOMContentLoaded', () => {
   loadTrackList();
 
-  // Optional: subscribe to real-time updates
+  // Subscribe to real-time vote updates
   supabase
     .channel('votes')
     .on(
