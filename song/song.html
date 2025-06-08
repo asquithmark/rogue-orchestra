@@ -5,18 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Song</title>
   <link rel="stylesheet" href="../style.css">
-  <!-- Ensure Font Awesome is loaded -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <!-- NEW: Moon icon is now permanent -->
   <button id="themeSwitcherBtn" class="theme-btn"><i class="fas fa-moon"></i></button>
-  <div id="song-container" data-song-id="123" class="container pop-in">
+  <div id="song-container" class="container">
     <a href="../index.html" id="backLink" class="back-link">← back to album</a>
     <h1 class="title">the rogue orchestra</h1>
     <img src="../assets/album.gif" alt="Album art" id="albumArt">
     <h2 id="songTitle" class="song-title"></h2>
-    <p id="songIntro" class="intro"></p>
     <h3 class="artist">the rogue orchestra</h3>
     <div class="progress-container">
       <span id="currentTime">0:00</span>
@@ -33,13 +30,12 @@
     <audio id="audioPlayer"></audio>
     <p class="feedback-header">leave your feedback</p>
     <div class="voting">
-      <!-- NEW: Replaced emoji with Font Awesome icons -->
       <button class="vote" data-vote="up"><i class="fa-regular fa-thumbs-up"></i></button>
       <span class="track-score" data-score>0</span>
       <button class="vote" data-vote="down"><i class="fa-regular fa-thumbs-down"></i></button>
     </div>
   </div>
-  <!-- Add the intro popup HTML -->
+  
   <div id="introPopup" class="popup-overlay">
     <div class="popup-content">
       <p><em>to enjoy this properly, sit down, close your eyes, turn the volume up, and let each track become the soundtrack to a film only you can see. pay attention to every detail, immerse yourself, and get lost inside the world it creates.</em></p>
