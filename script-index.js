@@ -15,24 +15,32 @@ async function loadTrackList() {
       return;
     }
 
+    // Clear existing list to avoid duplicates
+    trackList.innerHTML = '';
+
     songs.forEach(song => {
       const li = document.createElement('li');
       li.classList.add('track-item');
 
       const a = document.createElement('a');
+      // Add the 'track-button' class for styling
+      a.classList.add('track-button');
       a.href = `./song/song.html?id=${song.id}`;
-      a.textContent = song.title;
 
-      const span = document.createElement('span');
-      span.classList.add('track-score');
-      span.setAttribute('data-score', song.id);
-      span.textContent = '0';
+      const titleSpan = document.createElement('span');
+      titleSpan.textContent = song.title;
 
-      a.appendChild(document.createTextNode(' '));
-      a.appendChild(span);
+      const scoreSpan = document.createElement('span');
+      scoreSpan.classList.add('track-score');
+      scoreSpan.setAttribute('data-score', song.id);
+      scoreSpan.textContent = '0'; // Default score
+
+      a.appendChild(titleSpan);
+      a.appendChild(scoreSpan);
       li.appendChild(a);
       trackList.appendChild(li);
 
+      // Refresh the score for this track
       refreshScore(song.id);
     });
   } catch (error) {
