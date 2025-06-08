@@ -1,4 +1,4 @@
-// song/script-song.js - Final Version with Media Session and Popup Logic
+// song/script-song.js - Final Polished Version
 
 import { SUPABASE_URL, SUPABASE_KEY } from '../config.js';
 
@@ -7,7 +7,6 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 }
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// --- DOM ELEMENTS ---
 const songContainer = document.getElementById('song-container');
 const songTitleEl = document.getElementById('songTitle');
 const songDescriptionEl = document.getElementById('songDescription');
@@ -22,8 +21,6 @@ const toggleDescription = document.getElementById('toggleDescription');
 
 let songs = [];
 let currentSongIndex = -1;
-
-// --- FUNCTIONS ---
 
 async function loadSongs() {
   try {
@@ -50,21 +47,18 @@ function loadSong(songId) {
   audioPlayer.src = `../assets/${song.audioFile}`;
   
   songContainer.dataset.songId = song.id;
+  document.querySelectorAll('.vote').forEach(btn => btn.dataset.songId = song.id);
   refreshScore(song.id);
 
-  // NEW: Media Session API for Lock Screen Controls
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: song.title,
       artist: 'the rogue orchestra',
       album: 'The Rogue Orchestra',
       artwork: [
-        // Using a static PNG for lock screen is required. 
-        // Best to create a real 512x512 PNG version of your album art.
-        { src: 'https://placehold.co/512x512/000000/4e6464?text=R.O.', sizes: '512x512', type: 'image/png' },
+        { src: '../assets/album-art-512.png', sizes: '512x512', type: 'image/png' },
       ]
     });
-
     navigator.mediaSession.setActionHandler('play', () => playSong());
     navigator.mediaSession.setActionHandler('pause', () => pauseSong());
     navigator.mediaSession.setActionHandler('previoustrack', () => changeSong(-1));
@@ -75,17 +69,13 @@ function loadSong(songId) {
 function playSong() {
   audioPlayer.play();
   playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = "playing";
-  }
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
 }
 
 function pauseSong() {
   audioPlayer.pause();
   playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = "paused";
-  }
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
 }
 
 function changeSong(direction) {
@@ -99,30 +89,44 @@ function changeSong(direction) {
 }
 
 function updateProgress(e) {
-    //... (function remains the same)
-}
-function formatTime(seconds) {
-    //... (function remains the same)
-}
-async function submitVote(songId, vote) {
-    //... (function remains the same)
-}
-async function refreshScore(songId) {
-    //... (function remains the same)
+  const { duration, currentTime } = e.srcElement;
+  if(duration) {
+    const progressPercent = (currentTime / duration) * 100;
+    progressBar.value = progressPercent;
+    durationEl.textContent = formatTime(duration);
+  }
+  currentTimeEl.textContent = formatTime(currentTime);
 }
 
-// --- INITIALIZATION ---
+function formatTime(seconds) {
+  if (isNaN(seconds)) return '0:00';
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${String(secs).padStart(2, '0')}`;
+}
+
+async function submitVote(songId, vote) {
+  const { error } = await supabase.from('votes').insert({ song_id: songId, vote });
+  if (error) console.error('Insert error:', error);
+  else refreshScore(songId);
+}
+
+async function refreshScore(songId) {
+  const { count: ups } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'up');
+  const { count: downs } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'down');
+  const scoreSpan = document.querySelector('.track-score[data-score]');
+  if (scoreSpan) scoreSpan.textContent = (ups || 0) - (downs || 0);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-  // NEW: Popup Logic moved here
   const popup = document.getElementById('introPopup');
   const continueBtn = document.getElementById('continueToSongBtn');
 
   if (popup && continueBtn) {
       if (!localStorage.getItem('hasSeenIntroPopup')) {
           popup.style.display = 'flex';
-          localStorage.setItem('hasSeenIntroPopup', 'true'); // Set flag immediately
+          localStorage.setItem('hasSeenIntroPopup', 'true');
       }
-
       continueBtn.addEventListener('click', () => {
           popup.style.display = 'none';
       });
@@ -132,16 +136,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const songId = parseInt(urlParams.get('id'), 10);
 
-  if (songId && !isNaN(songId)) {
-    loadSong(songId);
-  } else {
-    songTitleEl.textContent = 'No track selected.';
-  }
+  if (songId && !isNaN(songId)) loadSong(songId);
+  else songTitleEl.textContent = 'No track selected.';
 
-  // --- EVENT LISTENERS ---
   playPauseBtn.addEventListener('click', () => {
-    const isPlaying = !audioPlayer.paused;
-    isPlaying ? pauseSong() : playSong();
+    audioPlayer.paused ? playSong() : pauseSong();
   });
   prevBtn.addEventListener('click', () => changeSong(-1));
   nextBtn.addEventListener('click', () => changeSong(1));
@@ -149,25 +148,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   audioPlayer.addEventListener('loadedmetadata', updateProgress);
   audioPlayer.addEventListener('ended', () => changeSong(1));
   progressBar.addEventListener('input', (e) => {
-    if (audioPlayer.duration) {
-      audioPlayer.currentTime = (e.target.value / 100) * audioPlayer.duration;
-    }
+    if (audioPlayer.duration) audioPlayer.currentTime = (e.target.value / 100) * audioPlayer.duration;
   });
-
   toggleDescription.addEventListener('click', () => {
     songDescriptionEl.classList.toggle('collapsed');
     toggleDescription.textContent = songDescriptionEl.classList.contains('collapsed') ? 'show more' : 'show less';
   });
-
   document.querySelectorAll('.vote').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const songId = parseInt(songContainer.dataset.songId, 10);
+      const songId = parseInt(btn.closest('.container').dataset.songId, 10);
       const voteType = btn.dataset.vote;
-      if (!isNaN(songId)) {
-        submitVote(songId, voteType);
-      }
+      if (!isNaN(songId)) submitVote(songId, voteType);
     });
   });
 });
-
-// The functions updateProgress, formatTime, submitVote, and refreshScore are assumed to be here, unchanged from your working version. I'm omitting them for brevity.
