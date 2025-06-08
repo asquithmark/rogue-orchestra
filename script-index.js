@@ -1,4 +1,4 @@
-// script-index.js (in root, next to index.html)
+// script-index.js
 
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -21,14 +21,11 @@ async function loadTrackList() {
       const li = document.createElement('li');
       li.classList.add('track-item');
 
-      // The link itself is the button
+      // The <a> tag acts as the container for the title and score.
       const a = document.createElement('a');
       a.href = `./song/song.html?id=${song.id}`;
-      a.classList.add('track-button'); // Apply button styling
-
-      // This div will contain the title and score
-      const trackRow = document.createElement('div');
-      trackRow.classList.add('track-row');
+      // Note: The .track-button styles are applied via other classes in style.css
+      // We will rely on the existing .track-item a selector.
 
       // Title span
       const titleSpan = document.createElement('span');
@@ -40,12 +37,9 @@ async function loadTrackList() {
       scoreSpan.setAttribute('data-score', song.id);
       scoreSpan.textContent = '0'; // Default score
 
-      // Append title and score to the row
-      trackRow.appendChild(titleSpan);
-      trackRow.appendChild(scoreSpan);
-      
-      // Append the row to the link
-      a.appendChild(trackRow);
+      // Append title and score directly to the link
+      a.appendChild(titleSpan);
+      a.appendChild(scoreSpan);
       
       // Append the link to the list item
       li.appendChild(a);
