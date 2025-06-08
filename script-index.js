@@ -1,6 +1,17 @@
 // script-index.js
 
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+
+// Ensure Supabase credentials are loaded
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error("Supabase credentials not found. Make sure config.js is present and correct.");
+  // You might want to display an error message to the user in the UI
+  const trackList = document.getElementById('trackList');
+  if(trackList) {
+    trackList.innerHTML = '<li><p style="color: red;">Error: Application is not configured correctly. Please contact the administrator.</p></li>';
+  }
+}
+
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Function to load and display the track list
