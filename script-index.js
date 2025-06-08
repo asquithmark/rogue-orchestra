@@ -1,4 +1,4 @@
-// script-index.js - Final Version with Popup Logic
+// script-index.js - Final Version with "Show More" Logic
 
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
 
@@ -10,17 +10,11 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- Functions ---
 
-/**
- * Fetches the score for a single song from Supabase and updates the DOM.
- * @param {number} songId - The ID of the song to refresh.
- */
 async function refreshScore(songId) {
   try {
     const { count: ups } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'up');
     const { count: downs } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'down');
-    
     const score = (ups || 0) - (downs || 0);
-
     const scoreElement = document.querySelector(`.track-score[data-song-id="${songId}"]`);
     if (scoreElement) {
       scoreElement.textContent = score;
@@ -30,11 +24,6 @@ async function refreshScore(songId) {
   }
 }
 
-
-/**
- * Loads the initial track list from songs.json, displays it,
- * and then fetches the scores.
- */
 async function loadTrackList() {
   try {
     const response = await fetch('./songs.json');
@@ -49,7 +38,6 @@ async function loadTrackList() {
 
     trackList.innerHTML = ''; // Clear existing list
 
-    // Display the list first from the local JSON file
     songs.forEach((song, index) => {
       const li = document.createElement('li');
       li.classList.add('track-item');
@@ -63,15 +51,14 @@ async function loadTrackList() {
 
       const scoreSpan = document.createElement('span');
       scoreSpan.classList.add('track-score');
-      scoreSpan.setAttribute('data-song-id', song.id); // Set a unique ID for updating
-      scoreSpan.textContent = '...'; // Placeholder while score loads
+      scoreSpan.setAttribute('data-song-id', song.id);
+      scoreSpan.textContent = '...'; 
 
       a.appendChild(titleSpan);
       a.appendChild(scoreSpan);
       li.appendChild(a);
       trackList.appendChild(li);
 
-      // After rendering the track, fetch its score
       refreshScore(song.id);
     });
 
@@ -84,9 +71,6 @@ async function loadTrackList() {
   }
 }
 
-/**
- * Subscribes to real-time updates from the 'votes' table.
- */
 function subscribeToVotes() {
   supabase
     .channel('public:votes')
@@ -103,7 +87,6 @@ function subscribeToVotes() {
     .subscribe();
 }
 
-
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -112,14 +95,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const continueBtn = document.getElementById('continueToSongBtn');
 
   if (popup && continueBtn) {
-      // Show popup only if the user hasn't seen it before
       if (!localStorage.getItem('hasSeenIntroPopup')) {
           popup.style.display = 'flex';
       }
-
       continueBtn.addEventListener('click', () => {
           popup.style.display = 'none';
           localStorage.setItem('hasSeenIntroPopup', 'true');
+      });
+  }
+
+  // --- "Show More" Logic --- THE FIX
+  const toggleAlbumDescription = document.getElementById('toggleAlbumDescription');
+  const albumDescription = document.getElementById('albumDescription');
+
+  if(toggleAlbumDescription && albumDescription){
+      toggleAlbumDescription.addEventListener('click', () => {
+          albumDescription.classList.toggle('collapsed');
+          const isCollapsed = albumDescription.classList.contains('collapsed');
+          toggleAlbumDescription.textContent = isCollapsed ? 'show more' : 'show less';
       });
   }
 
