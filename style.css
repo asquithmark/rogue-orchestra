@@ -1,4 +1,4 @@
-/* style.css - Final Version with Popup Styles */
+/* style.css - Final Version with Scrolling Fix */
 
 :root {
   /* --- Dark Mode (Default) --- */
@@ -26,7 +26,7 @@ body {
   padding: 1rem; /* Better for mobile */
   box-sizing: border-box;
   transition: background 0.5s ease;
-  overflow: hidden;
+  overflow-x: hidden; /* THE FIX: Prevents horizontal scroll but allows vertical */
   position: relative;
 }
 
@@ -73,14 +73,14 @@ body.light-mode {
   max-width: 500px;
   background: var(--card-bg);
   border-radius: 28px;
-  padding: 2rem 1.5rem; /* Adjusted padding for mobile */
+  padding: 2rem 1.5rem;
   box-shadow: 0 16px 40px 0 var(--shadow-color);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: relative;
-  /* Animated Gradient Border */
   border: 1px solid transparent;
   background-clip: padding-box;
+  margin: 2rem 0; /* Add margin for scrolling space */
 }
 
 .container::after {
@@ -88,8 +88,8 @@ body.light-mode {
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: -1;
-    margin: -1px; /* Border width */
-    border-radius: inherit; /* Inherit border-radius */
+    margin: -1px;
+    border-radius: inherit;
     background: linear-gradient(120deg, var(--accent-color), var(--card-border), var(--accent-color));
     background-size: 300% 300%;
     animation: flow-gradient 8s ease infinite;
@@ -357,6 +357,7 @@ h2 {
   max-height: 4.5em; /* Adjust as needed */
   overflow: hidden;
   position: relative;
+  transition: max-height 0.3s ease-out; /* Add transition */
 }
 
 /* --- Popup Overlay --- */
