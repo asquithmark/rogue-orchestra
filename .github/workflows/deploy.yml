@@ -31,10 +31,17 @@ jobs:
         run: npm test
       - name: Build site
         run: |
+          # Create distribution directories
           rm -rf dist
           mkdir -p dist/song dist/assets
-          echo "export const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > dist/config.js
-          echo "export const SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}';" >> dist/config.js
+
+          # Create config.js from the example and secrets
+          # This is a more robust way to handle configuration
+          cp config.example.js dist/config.js
+          sed -i "s|<SUPABASE_URL>|${{ secrets.SUPABASE_URL }}|g" dist/config.js
+          sed -i "s|<PUBLIC_ANON_KEY>|${{ secrets.SUPABASE_KEY }}|g" dist/config.js
+          
+          # Copy all other necessary files
           cp index.html style.css script-index.js songs.json theme-switcher.js dist/
           cp song/song.html song/script-song.js dist/song/
           cp -r assets/. dist/assets/
