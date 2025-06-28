@@ -1,4 +1,4 @@
-// song/script-song.js - Final Polished Version v4
+// song/script-song.js - Final Polished Version v5
 
 import { SUPABASE_URL, SUPABASE_KEY } from '../config.js';
 
@@ -29,7 +29,7 @@ let currentBuffer;
 let startTime = 0; 
 let pausedAt = 0; 
 let isPlaying = false;
-let manualStop = false; // The new flag to prevent incorrect skipping
+let animationFrameId; // To control the progress bar animation loop
 const FADE_TIME = 1.5;
 
 // --- App State ---
@@ -67,6 +67,7 @@ async function loadSongs() {
 }
 
 async function loadSong(songId, playOnLoad = false) {
+    stopPlayback(); // Stop any currently playing track before loading a new one
     const song = songs.find(s => s.id === songId);
     if (!song) {
         console.error(`Song with ID ${songId} not found.`);
@@ -99,6 +100,8 @@ async function loadSong(songId, playOnLoad = false) {
         audioContext.decodeAudioData(arrayBuffer, (buffer) => {
             currentBuffer = buffer;
             durationEl.textContent = formatTime(buffer.duration);
+            progressBar.value = 0;
+            currentTimeEl.textContent = '0:00';
             if (playOnLoad) {
                 playSong();
             }
@@ -109,10 +112,6 @@ async function loadSong(songId, playOnLoad = false) {
 }
 
 function setupAudioNodes() {
-    if (audioSource) {
-        audioSource.disconnect();
-    }
-    
     audioSource = audioContext.createBufferSource();
     audioSource.buffer = currentBuffer;
     
@@ -138,15 +137,16 @@ function setupAudioNodes() {
     audioSource.connect(lastNode);
     lastNode.connect(audioContext.destination);
 
+    // Set the onended handler that will advance the track
     audioSource.onended = () => {
-      // THIS IS THE CRITICAL FIX:
-      // Only advance the song if it's playing and was NOT stopped manually.
-      if (isPlaying && !manualStop) {
+      // This will now only fire when the track finishes naturally
+      // because we disconnect it before any manual stop.
+      if (isPlaying) {
+        isPlaying = false;
         changeSong(1, true);
       }
     };
 }
-
 
 function playSong() {
   if (isPlaying || !currentBuffer) return;
@@ -155,12 +155,10 @@ function playSong() {
     audioContext.resume();
   }
   
-  manualStop = false; // Reset the flag every time we play
   setupAudioNodes();
   
   startTime = audioContext.currentTime - pausedAt;
   audioSource.start(0, pausedAt);
-  pausedAt = 0;
   isPlaying = true;
 
   playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
@@ -168,25 +166,36 @@ function playSong() {
   updateProgress();
 }
 
-function pauseSong() {
-  if (!isPlaying) return;
-  manualStop = true; // Set flag because this is a manual stop
-  pausedAt = audioContext.currentTime - startTime;
-  audioSource.stop();
-  isPlaying = false;
-  
-  playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
-  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
+// A new, robust function to handle all cases of stopping audio
+function stopPlayback(isPausing = false) {
+    if (!isPlaying) return;
+    
+    if (isPausing) {
+        pausedAt = audioContext.currentTime - startTime;
+    }
+    
+    // THE CRITICAL FIX: Explicitly remove the onended handler
+    // to prevent it from firing after a manual stop.
+    if (audioSource) {
+      audioSource.onended = null;
+      audioSource.stop(0);
+      audioSource = null;
+    }
+
+    isPlaying = false;
+    cancelAnimationFrame(animationFrameId);
+    playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
 }
+
 
 function changeSong(direction, autoPlay = true) {
     if (!songs.length) return;
 
     if (isPlaying) {
-        manualStop = true; // Ensure fading out is also considered a manual stop
         gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + FADE_TIME);
         setTimeout(() => {
-          if (audioSource) audioSource.stop();
+          stopPlayback();
         }, FADE_TIME * 1000);
     }
     
@@ -197,28 +206,25 @@ function changeSong(direction, autoPlay = true) {
     window.history.pushState({}, '', url);
 
     pausedAt = 0;
-    isPlaying = false;
     
     loadSong(nextSongId, autoPlay);
 }
 
 function updateProgress() {
-    if (!isPlaying) return;
+    if (!isPlaying || !currentBuffer) return;
     
-    const currentTime = audioContext.currentTime - startTime;
+    const currentTime = pausedAt + (audioContext.currentTime - startTime);
     const duration = currentBuffer.duration;
     
-    if (duration && currentTime <= duration) {
-        const progressPercent = (currentTime / duration) * 100;
-        progressBar.value = progressPercent;
+    if (currentTime <= duration) {
+        progressBar.value = (currentTime / duration) * 100;
         currentTimeEl.textContent = formatTime(currentTime);
-    } else if (currentTime > duration) {
-        // Handle the case where the song has ended but onended hasn't fired yet
+    } else {
         progressBar.value = 100;
         currentTimeEl.textContent = formatTime(duration);
     }
 
-    requestAnimationFrame(updateProgress);
+    animationFrameId = requestAnimationFrame(updateProgress);
 }
 
 
@@ -290,23 +296,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     playPauseBtn.addEventListener('click', () => {
-        isPlaying ? pauseSong() : playSong();
+        if (isPlaying) {
+            stopPlayback(true); // Call stop with 'isPausing' flag
+        } else {
+            playSong();
+        }
     });
 
     prevBtn.addEventListener('click', () => changeSong(-1));
     nextBtn.addEventListener('click', () => changeSong(1));
     
     progressBar.addEventListener('input', (e) => {
-        if (currentBuffer) {
-            const newTime = (e.target.value / 100) * currentBuffer.duration;
-            pausedAt = newTime;
-            if (isPlaying) {
-                manualStop = true; // Set flag before stopping
-                audioSource.stop();
-                playSong();
-            } else {
-                currentTimeEl.textContent = formatTime(newTime);
-            }
+        if (!currentBuffer) return;
+        
+        const wasPlaying = isPlaying;
+        if(wasPlaying) {
+            stopPlayback(false);
+        }
+
+        const newTime = (e.target.value / 100) * currentBuffer.duration;
+        pausedAt = newTime;
+        currentTimeEl.textContent = formatTime(newTime);
+        
+        if (wasPlaying) {
+            playSong();
         }
     });
 
@@ -330,17 +343,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.classList.add('active');
 
             if (isPlaying) {
-                pausedAt = audioContext.currentTime - startTime;
-                manualStop = true; // Set flag before stopping
-                audioSource.stop();
-                playSong();
+                const wasPlaying = isPlaying;
+                stopPlayback(true);
+                if(wasPlaying){
+                    playSong();
+                }
             }
         });
     });
     
     if ('mediaSession' in navigator) {
         navigator.mediaSession.setActionHandler('play', () => playSong());
-        navigator.mediaSession.setActionHandler('pause', () => pauseSong());
+        navigator.mediaSession.setActionHandler('pause', () => stopPlayback(true));
         navigator.mediaSession.setActionHandler('previoustrack', () => changeSong(-1));
         navigator.mediaSession.setActionHandler('nexttrack', () => changeSong(1));
     }
