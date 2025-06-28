@@ -1,4 +1,4 @@
-// song/script-song.js - Final Polished Version v3 with Web Audio API
+// song/script-song.js - Final Polished Version v4
 
 import { SUPABASE_URL, SUPABASE_KEY } from '../config.js';
 
@@ -22,14 +22,15 @@ const eqButtons = document.querySelectorAll('.eq-btn');
 
 // --- Web Audio API Setup ---
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let audioSource; // The source node for the playing audio buffer
-let gainNode; // To control volume/gain (for fading and normalization)
-let eqNodes = {}; // To hold our EQ filter nodes
-let currentBuffer; // The decoded audio data
-let startTime = 0; // When the track started playing
-let pausedAt = 0; // The timestamp where the track was paused
+let audioSource; 
+let gainNode; 
+let eqNodes = {}; 
+let currentBuffer; 
+let startTime = 0; 
+let pausedAt = 0; 
 let isPlaying = false;
-const FADE_TIME = 1.5; // 1.5 seconds for crossfade
+let manualStop = false; // The new flag to prevent incorrect skipping
+const FADE_TIME = 1.5;
 
 // --- App State ---
 let songs = [];
@@ -37,7 +38,7 @@ let currentSongIndex = -1;
 
 // --- EQ PRESETS ---
 const EQ_PRESETS = {
-  'standard': [], // No filters for standard
+  'standard': [],
   'bass-boost': [
     { frequency: 100, gain: 7, type: 'lowshelf' },
     { frequency: 600, gain: -1, type: 'peaking' }
@@ -48,8 +49,8 @@ const EQ_PRESETS = {
     { frequency: 10000, gain: 4, type: 'highshelf' }
   ],
   'small-speakers': [
-      { frequency: 120, gain: -6, type: 'highpass' }, // Cut deep bass that small speakers can't handle
-      { frequency: 3000, gain: 3, type: 'peaking' }, // Boost for clarity
+      { frequency: 120, gain: -6, type: 'highpass' },
+      { frequency: 3000, gain: 3, type: 'peaking' },
   ]
 };
 let activeEQ = 'standard';
@@ -70,7 +71,6 @@ async function loadSong(songId, playOnLoad = false) {
     if (!song) {
         console.error(`Song with ID ${songId} not found.`);
         songTitleEl.textContent = 'Track not found';
-        // Improved Error Handling: Show a message and a link back to the main page.
         songDescriptionEl.innerHTML = `We couldn't find this track. <br/><a href="../index.html" style="color: var(--accent-color);">Return to album tracklist.</a>`;
         document.querySelector('.progress-container').style.display = 'none';
         document.querySelector('.controls').style.display = 'none';
@@ -93,17 +93,14 @@ async function loadSong(songId, playOnLoad = false) {
         });
     }
     
-    // --- New Audio Loading with Web Audio API ---
     try {
         const response = await fetch(`../assets/${song.audioFile}`);
         const arrayBuffer = await response.arrayBuffer();
         audioContext.decodeAudioData(arrayBuffer, (buffer) => {
             currentBuffer = buffer;
+            durationEl.textContent = formatTime(buffer.duration);
             if (playOnLoad) {
                 playSong();
-            } else {
-                // Set duration display even if not playing yet
-                durationEl.textContent = formatTime(buffer.duration);
             }
         });
     } catch(error) {
@@ -116,22 +113,18 @@ function setupAudioNodes() {
         audioSource.disconnect();
     }
     
-    // Create new nodes
     audioSource = audioContext.createBufferSource();
     audioSource.buffer = currentBuffer;
     
     gainNode = audioContext.createGain();
     
-    // Volume Normalization: Analyze buffer and set gain
-    // This is a simple RMS based normalization.
     const rms = getRMS(currentBuffer.getChannelData(0));
-    const targetRMS = 0.1; // A reasonable target for loudness
+    const targetRMS = 0.1; 
     const gainValue = targetRMS / rms;
-    gainNode.gain.value = Math.min(gainValue, 1.5); // Cap gain to prevent excessive distortion
+    gainNode.gain.value = Math.min(gainValue, 1.5); 
 
-    // Create and connect EQ filters
     let lastNode = gainNode;
-    eqNodes = {}; // Clear old nodes
+    eqNodes = {};
     EQ_PRESETS[activeEQ].forEach((setting, i) => {
         const filter = audioContext.createBiquadFilter();
         filter.type = setting.type;
@@ -139,14 +132,16 @@ function setupAudioNodes() {
         filter.gain.value = setting.gain;
         lastNode.connect(filter);
         lastNode = filter;
-        eqNodes[i] = filter; // Store for later manipulation if needed
+        eqNodes[i] = filter;
     });
 
     audioSource.connect(lastNode);
     lastNode.connect(audioContext.destination);
 
     audioSource.onended = () => {
-      if (isPlaying) { // Only go to next song if it ended naturally
+      // THIS IS THE CRITICAL FIX:
+      // Only advance the song if it's playing and was NOT stopped manually.
+      if (isPlaying && !manualStop) {
         changeSong(1, true);
       }
     };
@@ -159,7 +154,8 @@ function playSong() {
   if (audioContext.state === 'suspended') {
     audioContext.resume();
   }
-
+  
+  manualStop = false; // Reset the flag every time we play
   setupAudioNodes();
   
   startTime = audioContext.currentTime - pausedAt;
@@ -174,6 +170,7 @@ function playSong() {
 
 function pauseSong() {
   if (!isPlaying) return;
+  manualStop = true; // Set flag because this is a manual stop
   pausedAt = audioContext.currentTime - startTime;
   audioSource.stop();
   isPlaying = false;
@@ -185,13 +182,11 @@ function pauseSong() {
 function changeSong(direction, autoPlay = true) {
     if (!songs.length) return;
 
-    // --- Crossfade Logic ---
     if (isPlaying) {
-        // Fade out the current song
+        manualStop = true; // Ensure fading out is also considered a manual stop
         gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + FADE_TIME);
-        // Stop the source after the fade is complete
         setTimeout(() => {
-          if (isPlaying) audioSource.stop();
+          if (audioSource) audioSource.stop();
         }, FADE_TIME * 1000);
     }
     
@@ -201,7 +196,6 @@ function changeSong(direction, autoPlay = true) {
     url.searchParams.set('id', nextSongId);
     window.history.pushState({}, '', url);
 
-    // Reset playback state for the new song
     pausedAt = 0;
     isPlaying = false;
     
@@ -209,19 +203,21 @@ function changeSong(direction, autoPlay = true) {
 }
 
 function updateProgress() {
-    if (!isPlaying || !currentBuffer) return;
+    if (!isPlaying) return;
     
     const currentTime = audioContext.currentTime - startTime;
     const duration = currentBuffer.duration;
     
-    if (duration) {
+    if (duration && currentTime <= duration) {
         const progressPercent = (currentTime / duration) * 100;
         progressBar.value = progressPercent;
-        durationEl.textContent = formatTime(duration);
+        currentTimeEl.textContent = formatTime(currentTime);
+    } else if (currentTime > duration) {
+        // Handle the case where the song has ended but onended hasn't fired yet
+        progressBar.value = 100;
+        currentTimeEl.textContent = formatTime(duration);
     }
-    currentTimeEl.textContent = formatTime(currentTime);
 
-    // Keep calling updateProgress while playing
     requestAnimationFrame(updateProgress);
 }
 
@@ -277,7 +273,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         continueBtn.addEventListener('click', () => {
             popup.style.display = 'none';
             localStorage.setItem('hasSeenIntroPopup', 'true');
-            // Resume audio context after user interaction
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
             }
@@ -306,6 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newTime = (e.target.value / 100) * currentBuffer.duration;
             pausedAt = newTime;
             if (isPlaying) {
+                manualStop = true; // Set flag before stopping
                 audioSource.stop();
                 playSong();
             } else {
@@ -334,18 +330,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.classList.add('active');
 
             if (isPlaying) {
-                // Re-setup audio nodes to apply new EQ
-                const wasPlaying = isPlaying;
-                if(wasPlaying) {
-                  pausedAt = audioContext.currentTime - startTime;
-                  audioSource.stop();
-                  playSong();
-                }
+                pausedAt = audioContext.currentTime - startTime;
+                manualStop = true; // Set flag before stopping
+                audioSource.stop();
+                playSong();
             }
         });
     });
     
-    // Media Session API Handlers
     if ('mediaSession' in navigator) {
         navigator.mediaSession.setActionHandler('play', () => playSong());
         navigator.mediaSession.setActionHandler('pause', () => pauseSong());
