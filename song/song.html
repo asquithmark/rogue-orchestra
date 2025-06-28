@@ -25,9 +25,17 @@
       <button id="playPauseBtn"><i class="fas fa-play"></i></button>
       <button id="nextBtn"><i class="fas fa-forward"></i></button>
     </div>
+    <div class="eq-container">
+      <p class="eq-header">EQ Presets</p>
+      <div class="eq-buttons">
+          <button class="eq-btn active" data-eq="standard">Standard</button>
+          <button class="eq-btn" data-eq="bass-boost">Bass Boost</button>
+          <button class="eq-btn" data-eq="classical">Classical</button>
+          <button class="eq-btn" data-eq="small-speakers">Small Speakers</button>
+      </div>
+    </div>
     <p id="songDescription" class="collapsed"></p>
     <span id="toggleDescription" class="toggle-description">show more</span>
-    <audio id="audioPlayer"></audio>
     <p class="feedback-header">leave your feedback</p>
     <div class="voting">
       <button class="vote" data-vote="up"><i class="fa-regular fa-thumbs-up"></i></button>
