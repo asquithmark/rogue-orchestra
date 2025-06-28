@@ -1,4 +1,4 @@
-/* style.css - Final Polished Version v2 */
+/* style.css - Final Polished Version v3 */
 
 :root {
   /* --- Dark Mode (Default) --- */
@@ -213,20 +213,39 @@ body.light-mode .track-item a {
   margin-top: 1.5rem;
   font-size: 0.8rem;
 }
+
+/* --- IMPROVED Progress Bar --- */
 .progress-container input[type="range"] {
-  flex: 1; -webkit-appearance: none; appearance: none;
-  width: 100%; height: 6px;
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px; /* Made thicker */
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px; outline: none; overflow: hidden;
+  border-radius: 4px; /* Half of height */
+  outline: none;
+  overflow: hidden;
+  transition: height 0.2s ease;
 }
+
+.progress-container input[type="range"]:hover {
+    height: 10px; /* Enlarge on hover for easier grabbing */
+    border-radius: 5px;
+}
+
 .progress-container input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 16px; height: 16px;
-  border-radius: 50%; background: var(--text-color);
-  cursor: pointer; border: none;
-  box-shadow: -407px 0 0 400px var(--accent-color);
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; /* Made larger */
+  height: 20px; /* Made larger */
+  border-radius: 50%;
+  background: var(--text-color);
+  cursor: pointer;
+  border: none;
+  /* This clever trick fills the 'played' part of the bar */
+  box-shadow: -500px 0 0 490px var(--accent-color);
 }
-/* NEW: Light mode styles for progress bar */
+
 body.light-mode .progress-container input[type="range"] {
     background: rgba(0,0,0,0.1);
 }
@@ -252,7 +271,7 @@ body.light-mode .progress-container input[type="range"]::-webkit-slider-thumb {
   align-items: center; justify-content: center;
   transition: background 0.3s ease, transform 0.2s ease;
 }
-/* NEW: Light mode styles for control buttons */
+
 body.light-mode .controls button {
     background: rgba(255,255,255,0.2);
     border: 1px solid rgba(0,0,0,0.1);
@@ -268,8 +287,46 @@ body.light-mode .controls button {
   width: 60px; height: 60px;
   font-size: 1.5rem; background: var(--accent-color);
   color: #fff;
-  border: none; /* Ensure play button has no extra border in light mode */
+  border: none;
 }
+
+/* --- NEW EQ STYLES --- */
+.eq-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+.eq-header {
+    font-weight: 500;
+    opacity: 0.8;
+    margin-bottom: 0.75rem;
+}
+.eq-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.eq-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    color: var(--text-color-muted);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.eq-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+.eq-btn.active {
+    background: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-color);
+}
+
 
 .feedback-header {
     text-align: center; margin-top: 2rem;
