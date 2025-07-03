@@ -19,15 +19,14 @@ const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 const toggleDescription = document.getElementById('toggleDescription');
 const eqButtons = document.querySelectorAll('.eq-btn');
+const audioEl = document.getElementById('audioPlayer');
 
 // --- Web Audio API Setup ---
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let audioSource; 
-let gainNode; 
-let eqNodes = {}; 
-let currentBuffer; 
-let startTime = 0; 
-let pausedAt = 0; 
+let mediaSource;
+let gainNode;
+let eqNodes = {};
+let currentBuffer;
 let isPlaying = false;
 let animationFrameId; // To control the progress bar animation loop
 const FADE_TIME = 1.5;
@@ -99,28 +98,36 @@ async function loadSong(songId, playOnLoad = false) {
         const arrayBuffer = await response.arrayBuffer();
         audioContext.decodeAudioData(arrayBuffer, (buffer) => {
             currentBuffer = buffer;
-            durationEl.textContent = formatTime(buffer.duration);
+        });
+        audioEl.src = `../assets/${song.audioFile}`;
+        audioEl.load();
+        audioEl.onloadedmetadata = () => {
+            durationEl.textContent = formatTime(audioEl.duration);
             progressBar.value = 0;
             currentTimeEl.textContent = '0:00';
             if (playOnLoad) {
                 playSong();
             }
-        });
+        };
     } catch(error) {
-        console.error('Error loading or decoding audio file:', error);
+        console.error('Error loading audio file:', error);
     }
 }
 
 function setupAudioNodes() {
-    audioSource = audioContext.createBufferSource();
-    audioSource.buffer = currentBuffer;
-    
+    if (!mediaSource) {
+        mediaSource = audioContext.createMediaElementSource(audioEl);
+    }
+
     gainNode = audioContext.createGain();
-    
-    const rms = getRMS(currentBuffer.getChannelData(0));
-    const targetRMS = 0.1; 
-    const gainValue = targetRMS / rms;
-    gainNode.gain.value = Math.min(gainValue, 1.5); 
+
+    let gainValue = 1;
+    if (currentBuffer) {
+        const rms = getRMS(currentBuffer.getChannelData(0));
+        const targetRMS = 0.1;
+        gainValue = Math.min(targetRMS / rms, 1.5);
+    }
+    gainNode.gain.value = gainValue;
 
     let lastNode = gainNode;
     eqNodes = {};
@@ -134,13 +141,11 @@ function setupAudioNodes() {
         eqNodes[i] = filter;
     });
 
-    audioSource.connect(lastNode);
+    mediaSource.connect(lastNode);
     lastNode.connect(audioContext.destination);
 
     // Set the onended handler that will advance the track
-    audioSource.onended = () => {
-      // This will now only fire when the track finishes naturally
-      // because we disconnect it before any manual stop.
+    audioEl.onended = () => {
       if (isPlaying) {
         isPlaying = false;
         changeSong(1, true);
@@ -149,16 +154,15 @@ function setupAudioNodes() {
 }
 
 function playSong() {
-  if (isPlaying || !currentBuffer) return;
-  
+  if (isPlaying) return;
+
   if (audioContext.state === 'suspended') {
     audioContext.resume();
   }
-  
+
   setupAudioNodes();
-  
-  startTime = audioContext.currentTime - pausedAt;
-  audioSource.start(0, pausedAt);
+
+  audioEl.play();
   isPlaying = true;
 
   playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
@@ -169,18 +173,14 @@ function playSong() {
 // A new, robust function to handle all cases of stopping audio
 function stopPlayback(isPausing = false) {
     if (!isPlaying) return;
-    
-    if (isPausing) {
-        pausedAt = audioContext.currentTime - startTime;
-    }
-    
+
     // THE CRITICAL FIX: Explicitly remove the onended handler
     // to prevent it from firing after a manual stop.
-    if (audioSource) {
-      audioSource.onended = null;
-      audioSource.stop(0);
-      audioSource = null;
+    audioEl.onended = null;
+    if (!isPausing) {
+        audioEl.currentTime = 0;
     }
+    audioEl.pause();
 
     isPlaying = false;
     cancelAnimationFrame(animationFrameId);
@@ -198,24 +198,22 @@ function changeSong(direction, autoPlay = true) {
           stopPlayback();
         }, FADE_TIME * 1000);
     }
-    
+
     currentSongIndex = (currentSongIndex + direction + songs.length) % songs.length;
     const nextSongId = songs[currentSongIndex].id;
     const url = new URL(window.location);
     url.searchParams.set('id', nextSongId);
     window.history.pushState({}, '', url);
 
-    pausedAt = 0;
-    
     loadSong(nextSongId, autoPlay);
 }
 
 function updateProgress() {
-    if (!isPlaying || !currentBuffer) return;
-    
-    const currentTime = pausedAt + (audioContext.currentTime - startTime);
-    const duration = currentBuffer.duration;
-    
+    if (!isPlaying || isNaN(audioEl.duration)) return;
+
+    const currentTime = audioEl.currentTime;
+    const duration = audioEl.duration;
+
     if (currentTime <= duration) {
         progressBar.value = (currentTime / duration) * 100;
         currentTimeEl.textContent = formatTime(currentTime);
@@ -307,20 +305,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     nextBtn.addEventListener('click', () => changeSong(1));
     
     progressBar.addEventListener('input', (e) => {
-        if (!currentBuffer) return;
-        
-        const wasPlaying = isPlaying;
-        if(wasPlaying) {
-            stopPlayback(false);
-        }
-
-        const newTime = (e.target.value / 100) * currentBuffer.duration;
-        pausedAt = newTime;
+        const newTime = (e.target.value / 100) * (audioEl.duration || 0);
+        audioEl.currentTime = newTime;
         currentTimeEl.textContent = formatTime(newTime);
-        
-        if (wasPlaying) {
-            playSong();
-        }
     });
 
     toggleDescription.addEventListener('click', () => {
