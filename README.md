@@ -2,7 +2,7 @@
 
 ## Configuration
 
-The file `config.js` must be created manually. Copy `config.example.js` to `config.js` and fill in your Supabase URL and public anon key. Commit `config.js` to the repo so GitHub Pages can serve it.
+Create `config.js` locally by copying `config.example.js` and filling in your Supabase credentials. **Do not commit this file.** It should remain private and only exist in your deployment environment.
 
 For local development you can still create `config.js` manually. Copy
 `config.example.js` to `config.js` and fill in your own Supabase URL and key.

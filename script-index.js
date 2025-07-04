@@ -1,6 +1,19 @@
 // script-index.js - Corrected and More Robust Version
 
-import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+
+// Attempt to load Supabase credentials dynamically. If config.js is missing
+// the tracklist will still load, but scores will be disabled.
+let SUPABASE_URL;
+let SUPABASE_KEY;
+async function loadCredentials() {
+  try {
+    const config = await import('./config.js');
+    SUPABASE_URL = config.SUPABASE_URL;
+    SUPABASE_KEY = config.SUPABASE_KEY;
+  } catch (err) {
+    console.warn('config.js not found - scores will not be loaded');
+  }
+}
 
 // This function now only handles the visual score update.
 function updateScore(songId, ups, downs) {
@@ -66,9 +79,13 @@ async function loadTrackList() {
 async function initializeDatabase(songs) {
   if (!songs || songs.length === 0) return;
 
-  // Gracefully handle missing credentials.
+  // Load credentials only when needed so the tracklist works without config.js
+  if (SUPABASE_URL === undefined) {
+      await loadCredentials();
+  }
+
   if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_URL.includes('<')) {
-      console.error("Supabase credentials not found or are invalid. Scores will not be loaded.");
+      console.warn('Supabase credentials missing or invalid. Scores will be skipped.');
       document.querySelectorAll('.track-score').forEach(el => el.textContent = '-');
       return;
   }
