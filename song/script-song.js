@@ -19,7 +19,6 @@ const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 const toggleDescription = document.getElementById('toggleDescription');
 const audioEl = document.getElementById('audioPlayer');
-const muteBtn = document.getElementById('muteBtn');
 let isPlaying = false;
 let animationFrameId; // To control the progress bar animation loop
 
@@ -88,12 +87,17 @@ async function loadSong(songId, playOnLoad = false) {
 function playSong() {
   if (isPlaying) return;
 
-  audioEl.play().catch(() => {});
-  isPlaying = true;
-
-  playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
-  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
-  updateProgress();
+  audioEl.play()
+    .then(() => {
+      isPlaying = true;
+      playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+      updateProgress();
+    })
+    .catch(() => {
+      isPlaying = false;
+      playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+    });
 }
 
 // A new, robust function to handle all cases of stopping audio
@@ -224,13 +228,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const newTime = (e.target.value / 100) * (audioEl.duration || 0);
         audioEl.currentTime = newTime;
         currentTimeEl.textContent = formatTime(newTime);
-    });
-
-
-    muteBtn.addEventListener('click', () => {
-        audioEl.muted = !audioEl.muted;
-        muteBtn.querySelector('i').classList.toggle('fa-volume-up', !audioEl.muted);
-        muteBtn.querySelector('i').classList.toggle('fa-volume-mute', audioEl.muted);
     });
 
 
