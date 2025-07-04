@@ -290,41 +290,18 @@ body.light-mode .controls button {
   border: none;
 }
 
-/* --- NEW EQ STYLES --- */
-.eq-container {
-    margin-top: 2rem;
-    text-align: center;
+/* --- Additional Controls --- */
+
+.controls input[type="range"] {
+  width: 80px;
 }
-.eq-header {
-    font-weight: 500;
-    opacity: 0.8;
-    margin-bottom: 0.75rem;
-}
-.eq-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-.eq-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--card-border);
-    color: var(--text-color-muted);
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.eq-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-color);
-}
-.eq-btn.active {
-    background: var(--accent-color);
-    color: #fff;
-    border-color: var(--accent-color);
+
+.controls select {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
 }
 
 
