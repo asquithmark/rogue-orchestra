@@ -19,9 +19,7 @@ const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 const toggleDescription = document.getElementById('toggleDescription');
 const audioEl = document.getElementById('audioPlayer');
-const volumeControl = document.getElementById('volumeControl');
 const muteBtn = document.getElementById('muteBtn');
-const speedSelect = document.getElementById('speedSelect');
 let isPlaying = false;
 let animationFrameId; // To control the progress bar animation loop
 
@@ -228,9 +226,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentTimeEl.textContent = formatTime(newTime);
     });
 
-    volumeControl.addEventListener('input', () => {
-        audioEl.volume = parseFloat(volumeControl.value);
-    });
 
     muteBtn.addEventListener('click', () => {
         audioEl.muted = !audioEl.muted;
@@ -238,9 +233,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         muteBtn.querySelector('i').classList.toggle('fa-volume-mute', audioEl.muted);
     });
 
-    speedSelect.addEventListener('change', () => {
-        audioEl.playbackRate = parseFloat(speedSelect.value);
-    });
 
     toggleDescription.addEventListener('click', () => {
         songDescriptionEl.classList.toggle('collapsed');

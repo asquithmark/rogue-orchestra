@@ -220,29 +220,28 @@ body.light-mode .track-item a {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 8px; /* Made thicker */
+  height: 12px; /* Easier touch target */
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px; /* Half of height */
+  border-radius: 6px;
   outline: none;
   overflow: hidden;
   transition: height 0.2s ease;
 }
 
 .progress-container input[type="range"]:hover {
-    height: 10px; /* Enlarge on hover for easier grabbing */
-    border-radius: 5px;
+    height: 14px;
+    border-radius: 7px;
 }
 
 .progress-container input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px; /* Made larger */
-  height: 20px; /* Made larger */
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--text-color);
   cursor: pointer;
   border: none;
-  /* This clever trick fills the 'played' part of the bar */
   box-shadow: -500px 0 0 490px var(--accent-color);
 }
 
@@ -258,15 +257,15 @@ body.light-mode .progress-container input[type="range"]::-webkit-slider-thumb {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   margin-top: 1.5rem;
 }
 
 .controls button {
   background: rgba(255, 255, 255, 0.1);
   border: none; border-radius: 50%;
-  width: 50px; height: 50px;
-  font-size: 1.1rem; color: var(--text-color);
+  width: 60px; height: 60px;
+  font-size: 1.25rem; color: var(--text-color);
   cursor: pointer; display: flex;
   align-items: center; justify-content: center;
   transition: background 0.3s ease, transform 0.2s ease;
@@ -284,26 +283,11 @@ body.light-mode .controls button {
 }
 .controls button:active { transform: scale(1.0); }
 .controls button#playPauseBtn {
-  width: 60px; height: 60px;
-  font-size: 1.5rem; background: var(--accent-color);
+  width: 72px; height: 72px;
+  font-size: 1.8rem; background: var(--accent-color);
   color: #fff;
   border: none;
 }
-
-/* --- Additional Controls --- */
-
-.controls input[type="range"] {
-  width: 80px;
-}
-
-.controls select {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: var(--text-color);
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-}
-
 
 .feedback-header {
     text-align: center; margin-top: 2rem;
