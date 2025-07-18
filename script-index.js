@@ -47,6 +47,7 @@ async function loadTrackList() {
 
       const a = document.createElement('a');
       a.href = `./song/song.html?id=${song.id}`;
+      a.classList.add('glass');
 
       const titleSpan = document.createElement('span');
       titleSpan.textContent = song.title;
