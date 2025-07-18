@@ -1,24 +1,29 @@
-/* style.css - Final Polished Version v3 */
+/* style.css - Liquid Glass Dawn Theme */
 
 :root {
   /* --- Dark Mode (Default) --- */
-  --bg-gradient-start: #000000; /* Black */
-  --bg-gradient-end: #0d2424;   /* Deeper, less saturated turquoise */
-  --card-bg: rgba(20, 20, 20, 0.5); 
+  --bg-gradient-start: #000;           /* night */
+  --bg-gradient-mid:   #111;           /* near black */
+  --bg-gradient-amber: #28140a;        /* early dawn hint */
+  --card-bg: rgba(20, 20, 20, 0.5);
   --card-border: rgba(255, 255, 255, 0.1);
   --text-color: #f8fafc;
   --text-color-muted: rgba(248, 250, 252, 0.6);
-  --accent-color: #4e6464;      /* Deep shade turquoise */
+  --accent-color: #3dd5c2;             /* primary accent */
   --shadow-color: rgba(0, 0, 0, 0.4);
   --aurora-color-1: hsla(180, 50%, 20%, 0.3);
   --aurora-color-2: hsla(200, 50%, 30%, 0.2);
+  --radius: 28px;
+  --blur: 24px;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--text-color);
-  background: linear-gradient(to bottom right, var(--bg-gradient-start), var(--bg-gradient-end));
+  background: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E") repeat,
+    linear-gradient(to top, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 85%, var(--bg-gradient-amber) 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -58,29 +63,42 @@ body::after {
 
 body.light-mode {
   --bg-gradient-start: #f0f9ff;
-  --bg-gradient-end: #e2e8f0; 
+  --bg-gradient-end: #e2e8f0;
   --card-bg: rgba(255, 255, 255, 0.5);
   --card-border: rgba(0, 0, 0, 0.1);
   --text-color: #0f172a;
   --text-color-muted: rgba(15, 23, 42, 0.6);
-  --accent-color: #4e6464; 
+  --accent-color: #3dd5c2;
   --shadow-color: rgba(100, 116, 139, 0.2);
+}
+
+/* --- Liquid Glass Utility --- */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(var(--blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
 }
 
 /* --- The Main Container --- */
 .container {
   width: 100%;
   max-width: 500px;
-  background: var(--card-bg);
-  border-radius: 28px;
   padding: 2rem 1.5rem;
-  box-shadow: 0 16px 40px 0 var(--shadow-color);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   position: relative;
+  margin: 2rem 0;
   border: 1px solid transparent;
   background-clip: padding-box;
-  margin: 2rem 0;
+}
+.container,
+.popup-content,
+.theme-btn,
+.track-item a,
+.controls button,
+.voting .vote {
+  border-radius: var(--radius);
 }
 
 .container::after {
@@ -149,15 +167,7 @@ h2 {
   margin-bottom: 0.75rem;
   color: var(--text-color);
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
   transition: background 0.3s ease, transform 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-body.light-mode .track-item a {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .track-item a:hover {
@@ -166,7 +176,7 @@ body.light-mode .track-item a {
 }
 
 .track-item a:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
     background: rgba(255, 255, 255, 0.2);
 }
 
@@ -262,13 +272,11 @@ body.light-mode .progress-container input[type="range"]::-webkit-slider-thumb {
 }
 
 .controls button {
-  background: rgba(255, 255, 255, 0.1);
-  border: none; border-radius: 50%;
   width: 60px; height: 60px;
   font-size: 1.25rem; color: var(--text-color);
   cursor: pointer; display: flex;
   align-items: center; justify-content: center;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 body.light-mode .controls button {
@@ -278,10 +286,9 @@ body.light-mode .controls button {
 
 
 .controls button:hover {
-  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
 }
-.controls button:active { transform: scale(1.0); }
+.controls button:active { transform: scale(0.96); }
 .controls button#playPauseBtn {
   width: 72px; height: 72px;
   font-size: 1.8rem; background: var(--accent-color);
@@ -300,13 +307,10 @@ body.light-mode .controls button {
 }
 
 .voting .vote {
-    background: transparent;
-    border: 1px solid var(--card-border);
-    border-radius: 50%;
     width: 44px; height: 44px;
     color: var(--text-color); cursor: pointer;
     font-size: 1.2rem;
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease;
     display: flex; align-items: center; justify-content: center;
 }
 
@@ -315,23 +319,24 @@ body.light-mode .controls button {
     border-color: var(--accent-color);
     transform: scale(1.1);
 }
+.voting .vote:active {
+    transform: scale(0.96);
+}
 
 /* --- Common Elements --- */
 .theme-btn {
   position: absolute; top: 1.5rem; right: 1.5rem;
   width: 48px; height: 48px; z-index: 100;
-  background: var(--card-bg); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.2rem; cursor: pointer;
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   color: var(--text-color);
-  box-shadow: 0 4px 15px var(--shadow-color);
-  border: 1px solid var(--card-border);
 }
 
 .theme-btn:hover {
   transform: scale(1.1) rotate(15deg);
-  background: rgba(255, 255, 255, 0.2);
+}
+.theme-btn:active {
+  transform: scale(0.96);
 }
 
 .description, #songDescription {
@@ -368,11 +373,8 @@ body.light-mode .controls button {
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 .popup-content {
-  background: var(--card-bg);
-  border-radius: 28px; padding: 2rem;
+  padding: 2rem;
   max-width: 400px; text-align: center;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 16px 40px 0 var(--shadow-color);
 }
 .popup-content p {
     margin: 0 0 1.5rem 0; line-height: 1.6;
@@ -385,3 +387,14 @@ body.light-mode .controls button {
   transition: transform 0.2s ease;
 }
 .popup-content button:hover { transform: scale(1.05); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: rgba(30,30,30,0.95);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  body {
+    background: #000;
+  }
+}
