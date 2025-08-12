@@ -1,11 +1,26 @@
 // song/script-song.js - Final Polished Version v5
 
-import { SUPABASE_URL, SUPABASE_KEY } from '../config.js';
+// Attempt to load Supabase credentials dynamically. If config.js is missing or
+// the credentials are invalid, voting/score features will be disabled but the
+// rest of the page (audio playback, track info) will still work.
+let supabase = null;
+async function initSupabase() {
+  try {
+    const { SUPABASE_URL, SUPABASE_KEY } = await import('../config.js');
+    if (SUPABASE_URL && SUPABASE_KEY && !SUPABASE_URL.includes('<')) {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      return;
+    }
+    console.warn('Supabase credentials missing or invalid. Voting disabled.');
+  } catch (err) {
+    console.warn('config.js not found - votes disabled');
+  }
 
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  throw new Error("Supabase credentials not found.");
+  // If Supabase couldn't be initialized, disable voting UI and show placeholder
+  // score so the rest of the page still functions.
+  document.querySelectorAll('.track-score').forEach(el => (el.textContent = '-'));
+  document.querySelectorAll('.vote').forEach(btn => (btn.disabled = true));
 }
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- DOM Elements ---
 const songContainer = document.getElementById('song-container');
@@ -159,8 +174,9 @@ function formatTime(seconds) {
 }
 
 async function submitVote(songId, vote) {
+  if (!supabase) return;
   const { error } = await supabase.from('votes').insert({ song_id: songId, vote });
-  if (error) { 
+  if (error) {
       console.error('Insert error:', error);
   } else {
       refreshScore(songId);
@@ -170,6 +186,10 @@ async function submitVote(songId, vote) {
 async function refreshScore(songId) {
   const scoreSpan = document.querySelector('.voting .track-score');
   if (!scoreSpan) return;
+  if (!supabase) {
+    scoreSpan.textContent = '-';
+    return;
+  }
 
   try {
     const { count: ups } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'up');
@@ -201,6 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    await initSupabase();
     await loadSongs();
     const urlParams = new URLSearchParams(window.location.search);
     const songIdParam = parseInt(urlParams.get('id'), 10);
