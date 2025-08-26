@@ -93,26 +93,31 @@ async function initializeDatabase(songs) {
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // Fetch initial scores for all songs at once.
-  const { data: votes, error } = await supabase.from('votes').select('song_id, vote');
+  // Fetch initial scores for each song individually. Selecting the whole table
+  // can fail with row-level security, so we count per song instead.
+  for (const song of songs) {
+    try {
+      const { count: ups, error: upErr } = await supabase
+        .from('votes')
+        .select('*', { head: true, count: 'exact' })
+        .eq('song_id', song.id)
+        .eq('vote', 'up');
 
-  if (error) {
-      console.error("Error fetching votes:", error);
-      return;
+      const { count: downs, error: downErr } = await supabase
+        .from('votes')
+        .select('*', { head: true, count: 'exact' })
+        .eq('song_id', song.id)
+        .eq('vote', 'down');
+
+      if (upErr || downErr) throw upErr || downErr;
+
+      updateScore(song.id, ups || 0, downs || 0);
+    } catch (err) {
+      console.error('Error fetching score for song', song.id, err);
+      const scoreEl = document.querySelector(`.track-score[data-song-id="${song.id}"]`);
+      if (scoreEl) scoreEl.textContent = '-';
+    }
   }
-
-  // Process votes and update the UI
-  const scores = {};
-  votes.forEach(v => {
-      if (!scores[v.song_id]) scores[v.song_id] = { ups: 0, downs: 0 };
-      if (v.vote === 'up') scores[v.song_id].ups++;
-      if (v.vote === 'down') scores[v.song_id].downs++;
-  });
-
-  songs.forEach(song => {
-      const songScore = scores[song.id] || { ups: 0, downs: 0 };
-      updateScore(song.id, songScore.ups, songScore.downs);
-  });
 
   // Subscribe to real-time updates.
   supabase
