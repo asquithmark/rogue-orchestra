@@ -91,42 +91,48 @@ async function initializeDatabase(songs) {
       return;
   }
 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  // Fetch initial scores for all songs at once.
-  const { data: votes, error } = await supabase.from('votes').select('song_id, vote');
-
-  if (error) {
-      console.error("Error fetching votes:", error);
+  if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+      console.warn('Supabase library not loaded. Scores will be skipped.');
+      document.querySelectorAll('.track-score').forEach(el => el.textContent = '-');
       return;
   }
 
-  // Process votes and update the UI
-  const scores = {};
-  votes.forEach(v => {
-      if (!scores[v.song_id]) scores[v.song_id] = { ups: 0, downs: 0 };
-      if (v.vote === 'up') scores[v.song_id].ups++;
-      if (v.vote === 'down') scores[v.song_id].downs++;
-  });
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  songs.forEach(song => {
-      const songScore = scores[song.id] || { ups: 0, downs: 0 };
-      updateScore(song.id, songScore.ups, songScore.downs);
-  });
+  async function fetchScore(songId) {
+    const { data, error } = await supabase
+      .from('votes')
+      .select('vote')
+      .eq('song_id', songId);
+    if (error) throw error;
+    const ups = data.filter(v => v.vote === 'up').length;
+    const downs = data.filter(v => v.vote === 'down').length;
+    return { ups, downs };
+  }
+
+  // Fetch initial scores for each song individually. Selecting the whole table
+  // can fail with row-level security, so we query per song instead.
+  for (const song of songs) {
+    try {
+      const { ups, downs } = await fetchScore(song.id);
+      updateScore(song.id, ups, downs);
+    } catch (err) {
+      console.error('Error fetching score for song', song.id, err);
+      const scoreEl = document.querySelector(`.track-score[data-song-id="${song.id}"]`);
+      if (scoreEl) scoreEl.textContent = '-';
+    }
+  }
 
   // Subscribe to real-time updates.
   supabase
     .channel('public:votes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'votes' }, (payload) => {
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'votes' }, async (payload) => {
         const songId = payload.new?.song_id || payload.old?.song_id;
         if (songId) {
-            // Refetch scores for the specific song that was changed
-            supabase.from('votes').select('vote').eq('song_id', songId).then(({ data, error }) => {
-                if (error) return;
-                const ups = data.filter(v => v.vote === 'up').length;
-                const downs = data.filter(v => v.vote === 'down').length;
+            try {
+                const { ups, downs } = await fetchScore(songId);
                 updateScore(songId, ups, downs);
-            });
+            } catch (_) {}
         }
       }
     )
