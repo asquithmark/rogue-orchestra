@@ -192,12 +192,17 @@ async function refreshScore(songId) {
   }
 
   try {
-    const { count: ups } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'up');
-    const { count: downs } = await supabase.from('votes').select('*', { head: true, count: 'exact' }).eq('song_id', songId).eq('vote', 'down');
-    scoreSpan.textContent = (ups || 0) - (downs || 0);
+    const { data, error } = await supabase
+      .from('votes')
+      .select('vote')
+      .eq('song_id', songId);
+    if (error) throw error;
+    const ups = data.filter(v => v.vote === 'up').length;
+    const downs = data.filter(v => v.vote === 'down').length;
+    scoreSpan.textContent = ups - downs;
   } catch (error) {
-      console.error('Error fetching score:', error);
-      scoreSpan.textContent = '-';
+    console.error('Error fetching score:', error);
+    scoreSpan.textContent = '-';
   }
 }
 
