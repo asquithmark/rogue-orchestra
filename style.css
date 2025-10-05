@@ -96,8 +96,7 @@ body.light-mode {
 .popup-content,
 .theme-btn,
 .track-item a,
-.controls button,
-.voting .vote {
+.controls button {
   border-radius: var(--radius);
 }
 
@@ -178,18 +177,6 @@ h2 {
 .track-item a:active {
     transform: scale(0.96);
     background: rgba(255, 255, 255, 0.2);
-}
-
-.track-score {
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 10px;
-  color: var(--text-color);
-  min-width: 20px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* --- Song Player Page --- */
@@ -294,33 +281,6 @@ body.light-mode .controls button {
   font-size: 1.8rem; background: var(--accent-color);
   color: #fff;
   border: none;
-}
-
-.feedback-header {
-    text-align: center; margin-top: 2rem;
-    font-weight: 500; opacity: 0.8;
-}
-
-.voting {
-    display: flex; justify-content: center;
-    align-items: center; gap: 1rem; margin-top: 1rem;
-}
-
-.voting .vote {
-    width: 44px; height: 44px;
-    color: var(--text-color); cursor: pointer;
-    font-size: 1.2rem;
-    transition: transform 0.2s ease;
-    display: flex; align-items: center; justify-content: center;
-}
-
-.voting .vote:hover {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
-    transform: scale(1.1);
-}
-.voting .vote:active {
-    transform: scale(0.96);
 }
 
 /* --- Common Elements --- */
