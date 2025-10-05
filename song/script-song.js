@@ -26,6 +26,7 @@ async function initSupabase() {
 const songContainer = document.getElementById('song-container');
 const songTitleEl = document.getElementById('songTitle');
 const playPauseBtn = document.getElementById('playPauseBtn');
+const playPauseIcon = playPauseBtn ? playPauseBtn.querySelector('i') : null;
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const progressBar = document.getElementById('progressBar');
@@ -36,7 +37,7 @@ const feedbackHeader = document.querySelector('.feedback-header');
 const votingSection = document.querySelector('.voting');
 const controls = document.querySelector('.controls');
 const progressContainer = document.querySelector('.progress-container');
-const defaultFeedbackText = feedbackHeader ? feedbackHeader.textContent : '';
+const defaultFeedbackText = feedbackHeader ? feedbackHeader.innerHTML : '';
 let isPlaying = false;
 let animationFrameId; // To control the progress bar animation loop
 
@@ -72,6 +73,7 @@ async function loadSong(songId, playOnLoad = false) {
         songContainer.dataset.songId = '';
         audioEl.removeAttribute('src');
         audioEl.load();
+        if (durationEl) durationEl.textContent = '0:00';
         return;
     }
 
@@ -80,7 +82,7 @@ async function loadSong(songId, playOnLoad = false) {
     songTitleEl.textContent = song.title;
     songContainer.dataset.songId = song.id;
     if (feedbackHeader) {
-        feedbackHeader.textContent = defaultFeedbackText;
+        feedbackHeader.innerHTML = defaultFeedbackText;
     }
     if (progressContainer) progressContainer.style.display = '';
     if (controls) controls.style.display = '';
@@ -120,29 +122,37 @@ function playSong() {
   audioEl.play()
     .then(() => {
       isPlaying = true;
-      playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
+      if (playPauseIcon) playPauseIcon.classList.replace('fa-play', 'fa-pause');
       if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
       updateProgress();
     })
     .catch(() => {
       isPlaying = false;
-      playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+      if (playPauseIcon) playPauseIcon.classList.replace('fa-pause', 'fa-play');
     });
 }
 
 // A new, robust function to handle all cases of stopping audio
-function stopPlayback(isPausing = false) {
-    if (!isPlaying) return;
-
+function stopPlayback(keepPosition = false) {
     audioEl.onended = null;
-    if (!isPausing) {
-        audioEl.currentTime = 0;
+
+    if (!audioEl.paused || isPlaying) {
+        audioEl.pause();
     }
-    audioEl.pause();
+
+    if (!keepPosition) {
+        try {
+            audioEl.currentTime = 0;
+        } catch (_) {
+            // Resetting currentTime on an uninitialized element can throw; ignore safely.
+        }
+        if (progressBar) progressBar.value = 0;
+        if (currentTimeEl) currentTimeEl.textContent = '0:00';
+    }
 
     isPlaying = false;
     cancelAnimationFrame(animationFrameId);
-    playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+    if (playPauseIcon) playPauseIcon.classList.replace('fa-pause', 'fa-play');
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
 }
 
@@ -150,9 +160,7 @@ function stopPlayback(isPausing = false) {
 function changeSong(direction, autoPlay = true) {
     if (!songs.length) return;
 
-    if (isPlaying) {
-        stopPlayback();
-    }
+    stopPlayback();
 
     currentSongIndex = (currentSongIndex + direction + songs.length) % songs.length;
     const nextSongId = songs[currentSongIndex].id;
@@ -256,7 +264,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     playPauseBtn.addEventListener('click', () => {
         if (isPlaying) {
-            stopPlayback(true); // Call stop with 'isPausing' flag
+            stopPlayback(true); // Pause without rewinding so playback can resume
         } else {
             playSong();
         }
