@@ -7,9 +7,12 @@
   --bg-gradient-amber: #324558;        /* neutral highlight */
   --card-bg: rgba(18, 29, 43, 0.34);
   --card-border: rgba(255, 255, 255, 0.16);
+  --frost-border-strong: rgba(255, 255, 255, 0.16);
+  --frost-highlight: rgba(255, 255, 255, 0.35);
   --text-color: #f8fafc;
   --text-color-muted: rgba(248, 250, 252, 0.64);
   --accent-color: #7dd3fc;             /* cool cyan accent */
+  --accent-glass: rgba(125, 211, 252, 0.16);
   --shadow-color: rgba(9, 14, 23, 0.55);
   --aurora-color-1: hsla(212, 70%, 62%, 0.16);
   --aurora-color-2: hsla(198, 64%, 52%, 0.12);
@@ -66,9 +69,12 @@ body.light-mode {
   --bg-gradient-amber: #d8e2ec;
   --card-bg: rgba(255, 255, 255, 0.46);
   --card-border: rgba(15, 23, 42, 0.08);
+  --frost-border-strong: rgba(15, 23, 42, 0.12);
+  --frost-highlight: rgba(255, 255, 255, 0.65);
   --text-color: #0f172a;
   --text-color-muted: rgba(15, 23, 42, 0.58);
   --accent-color: #38bdf8;
+  --accent-glass: rgba(56, 189, 248, 0.18);
   --shadow-color: rgba(15, 23, 42, 0.22);
 }
 
@@ -218,9 +224,13 @@ body.light-mode .track-item a {
   color: var(--text-color);
   min-width: 20px;
   text-align: center;
-  background: rgba(125, 211, 252, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: var(--accent-glass);
+  border: 1px solid var(--frost-border-strong);
+  box-shadow: inset 0 1px 0 var(--frost-highlight);
+}
+
+body.light-mode .track-score {
+  color: #0f172a;
 }
 
 /* --- Song Player Page --- */
@@ -366,11 +376,15 @@ body.light-mode .controls button {
     width: 44px; height: 44px;
     color: var(--text-color); cursor: pointer;
     font-size: 1.1rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--card-border);
     background: rgba(255, 255, 255, 0.06);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 0 var(--frost-highlight);
     transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     display: flex; align-items: center; justify-content: center;
+}
+
+body.light-mode .voting .vote {
+    background: rgba(255, 255, 255, 0.42);
 }
 
 .voting .vote:hover {
