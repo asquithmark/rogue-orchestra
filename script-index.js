@@ -142,17 +142,6 @@ async function initializeDatabase(songs) {
 
 // --- Main Execution ---
 document.addEventListener('DOMContentLoaded', async () => {
-  // Toggle for the album description
-  const toggleAlbumDescription = document.getElementById('toggleAlbumDescription');
-  const albumDescription = document.getElementById('albumDescription');
-
-  if (toggleAlbumDescription && albumDescription) {
-      toggleAlbumDescription.addEventListener('click', () => {
-          albumDescription.classList.toggle('collapsed');
-          toggleAlbumDescription.textContent = albumDescription.classList.contains('collapsed') ? 'show more' : 'show less';
-      });
-  }
-
   // Step 1: Immediately load the visual tracklist.
   const songs = await loadTrackList();
   

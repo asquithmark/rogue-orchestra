@@ -339,24 +339,13 @@ body.light-mode .controls button {
   transform: scale(0.96);
 }
 
-.description, #songDescription {
-  margin-top: 1rem; line-height: 1.6;
-  font-size: 0.95rem; color: var(--text-color-muted);
-  text-align: center;
-}
-#songDescription { text-align: left; }
-
-.toggle-description, .back-link {
+.back-link {
   display: block; text-align: center;
   margin-top: 1rem; font-weight: 500;
   color: var(--accent-color); text-decoration: none; cursor: pointer;
 }
 
-.back-link:hover, .toggle-description:hover { text-decoration: underline; }
-.collapsed {
-  max-height: 4.5em; overflow: hidden;
-  position: relative; transition: max-height 0.3s ease-out;
-}
+.back-link:hover { text-decoration: underline; }
 
 /* --- Popup Overlay --- */
 .popup-overlay {

@@ -25,15 +25,18 @@ async function initSupabase() {
 // --- DOM Elements ---
 const songContainer = document.getElementById('song-container');
 const songTitleEl = document.getElementById('songTitle');
-const songDescriptionEl = document.getElementById('songDescription');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const progressBar = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
-const toggleDescription = document.getElementById('toggleDescription');
 const audioEl = document.getElementById('audioPlayer');
+const feedbackHeader = document.querySelector('.feedback-header');
+const votingSection = document.querySelector('.voting');
+const controls = document.querySelector('.controls');
+const progressContainer = document.querySelector('.progress-container');
+const defaultFeedbackText = feedbackHeader ? feedbackHeader.textContent : '';
 let isPlaying = false;
 let animationFrameId; // To control the progress bar animation loop
 
@@ -59,17 +62,29 @@ async function loadSong(songId, playOnLoad = false) {
     if (!song) {
         console.error(`Song with ID ${songId} not found.`);
         songTitleEl.textContent = 'Track not found';
-        songDescriptionEl.innerHTML = `We couldn't find this track. <br/><a href="../index.html" style="color: var(--accent-color);">Return to album tracklist.</a>`;
-        document.querySelector('.progress-container').style.display = 'none';
-        document.querySelector('.controls').style.display = 'none';
+        document.title = 'Track not found';
+        if (feedbackHeader) {
+            feedbackHeader.innerHTML = `We couldn't find this track. <a href="../index.html" style="color: var(--accent-color);">Return to album tracklist.</a>`;
+        }
+        if (progressContainer) progressContainer.style.display = 'none';
+        if (controls) controls.style.display = 'none';
+        if (votingSection) votingSection.style.display = 'none';
+        songContainer.dataset.songId = '';
+        audioEl.removeAttribute('src');
+        audioEl.load();
         return;
     }
 
     currentSongIndex = songs.findIndex(s => s.id === songId);
     document.title = song.title;
     songTitleEl.textContent = song.title;
-    songDescriptionEl.innerHTML = song.description;
     songContainer.dataset.songId = song.id;
+    if (feedbackHeader) {
+        feedbackHeader.textContent = defaultFeedbackText;
+    }
+    if (progressContainer) progressContainer.style.display = '';
+    if (controls) controls.style.display = '';
+    if (votingSection) votingSection.style.display = 'flex';
     refreshScore(song.id);
 
     if ('mediaSession' in navigator) {
@@ -254,12 +269,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const newTime = (e.target.value / 100) * (audioEl.duration || 0);
         audioEl.currentTime = newTime;
         currentTimeEl.textContent = formatTime(newTime);
-    });
-
-
-    toggleDescription.addEventListener('click', () => {
-        songDescriptionEl.classList.toggle('collapsed');
-        toggleDescription.textContent = songDescriptionEl.classList.contains('collapsed') ? 'show more' : 'show less';
     });
 
     document.querySelectorAll('.vote').forEach((btn) => {
