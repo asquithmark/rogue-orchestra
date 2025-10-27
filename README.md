@@ -1,25 +1,45 @@
-# Rogue Orchestra
+# the rogue orchestra · local player
 
-## Offline-first experience
+A local-first, Apple iOS "liquid glass" inspired music player built with React, Vite, and Tailwind CSS. Everything runs directly in the browser with your own audio files—no accounts, analytics, or network calls.
 
-This project now ships as a streamlined, offline-first player. All track details
-and audio files are bundled with the site, so the music library and playback
-controls work entirely in the browser without needing any external services or
-an internet connection once the assets are cached. Open `index.html` to browse
-the album, then jump into any song page for rich descriptions, player controls,
-and the optional immersive listening prompt.
+## Getting started
 
-Because the interface runs purely on static files, you can host it anywhere that
-can serve HTML—GitHub Pages, Netlify, or even your local file system.
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## Running tests
+2. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+   Open the printed local URL in your browser. The site automatically reloads when you change code.
 
-1. Ensure Node.js is installed.
-2. From the repository root run:
+3. **Build for production**
+   ```bash
+   npm run build
+   ```
+   The optimised files are emitted to `dist/`. Preview the build with:
+   ```bash
+   npm run preview
+   ```
 
-```bash
-npm test
-```
+## Add your music
 
-This executes a simple Node script that loads `songs.json` and confirms that
-every `audioFile` listed exists in the `assets/` directory.
+- Place audio files in `public/audio/` and artwork images in `public/artwork/`.
+- Update `src/data/tracks.js` with the correct filenames, artwork paths, song titles, and credits. The placeholders are intentionally generic so you can supply the real information.
+- The first entry in `tracks.js` is used for the album hero artwork.
+
+## Customise the background tint
+
+`src/utils/colorFromArtwork.js` currently returns a high-quality fallback gradient. When you are ready, replace the placeholder logic with a real dominant-colour extractor (for example, use an offscreen canvas to average pixels) and update the returned gradient or base colour.
+
+## How playback works
+
+- Audio playback is handled by the browser’s `<audio>` element inside `PlayerContext`.
+- When a track plays, the Media Session API updates the system metadata so iOS lock screen and Control Centre controls show the right information and artwork.
+- Playback continues as you navigate between the album page (`/`) and the full player view (`/track/:id`).
+
+## Privacy and offline use
+
+This project contains **no** analytics, tracking scripts, external fonts, or remote API calls. All audio files stay on your device and are served locally by Vite during development or any static file server in production.

@@ -1,27 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Rogue Orchestra</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-  <button id="themeSwitcherBtn" class="theme-btn glass"><i class="fas fa-moon"></i></button>
-  <div class="container full-width glass">
-    <h1 class="title">the rogue orchestra</h1>
-    <section class="album-info">
-      <img src="assets/album.gif" alt="Album art">
-      <p id="albumDescription" class="description collapsed">
-        it begins as a formal concert, with order and restraint, before slipping into a dream and then breaking apart. the orchestra abandons the page, memories of summer fade, urgency and revolt take hold. what follows is a journey, a battle, and finally the sound of finding something new after everything has unraveled.
-      </p>
-      <span id="toggleAlbumDescription" class="toggle-description">show more</span>
-    </section>
-    <h2>tracklist</h2>
-    <ul id="trackList" class="track-list"></ul>
-  </div>
-  <script src="theme-switcher.js"></script>
-  <script type="module" src="script-index.js"></script>
-</body>
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>the rogue orchestra · player</title>
+  </head>
+  <body class="h-full font-sans antialiased">
+    <div id="root" class="h-full"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

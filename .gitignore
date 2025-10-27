@@ -1,7 +1,5 @@
-# Ignore distribution and dependencies
-dist/
-node_modules/
-
-# Never commit credentials
-config.js
-
+node_modules
+.DS_Store
+/dist
+npm-debug.log*
+*.local
