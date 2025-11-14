@@ -4,7 +4,9 @@ import tracks from './data/tracks.js';
 const resolveAssetUrl = (path) => {
   if (!path) return '';
   const normalized = path.startsWith('/') ? path.slice(1) : path;
-  return new URL(normalized, import.meta.env.BASE_URL).toString();
+  const base = import.meta.env.BASE_URL || '/';
+  const ensuredTrailingSlash = base.endsWith('/') ? base : `${base}/`;
+  return `${ensuredTrailingSlash}${normalized}`;
 };
 
 export default function App() {
@@ -14,8 +16,7 @@ export default function App() {
     () =>
       tracks.map((track) => ({
         ...track,
-        resolvedSrc: resolveAssetUrl(track.src),
-        resolvedArtwork: resolveAssetUrl(track.artwork)
+        resolvedSrc: resolveAssetUrl(track.src)
       })),
     []
   );
