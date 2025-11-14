@@ -17,6 +17,7 @@ const resolveAssetUrl = (path) => {
 export default function App() {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(tracks.length ? 0 : null);
   const audioRef = useRef(null);
+  const playOnSelectRef = useRef(null);
   const resolvedTracks = useMemo(
     () =>
       tracks.map((track) => ({
@@ -27,16 +28,40 @@ export default function App() {
   );
 
   useEffect(() => {
-    if (currentTrackIndex === null) return;
+    if (currentTrackIndex === null) return undefined;
     const audioElement = audioRef.current;
-    if (!audioElement) return;
+    if (!audioElement) return undefined;
 
     const track = resolvedTracks[currentTrackIndex];
-    if (!track) return;
+    if (!track) return undefined;
 
-    if (audioElement.src !== track.resolvedSrc) {
+    if (audioElement.getAttribute('src') !== track.resolvedSrc) {
       audioElement.src = track.resolvedSrc;
     }
+
+    if (playOnSelectRef.current !== currentTrackIndex) {
+      return undefined;
+    }
+
+    const attemptPlay = () => {
+      playOnSelectRef.current = null;
+      audioElement.play().catch(() => {});
+    };
+
+    if (audioElement.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      attemptPlay();
+      return undefined;
+    }
+
+    const handleCanPlay = () => {
+      audioElement.removeEventListener('canplay', handleCanPlay);
+      attemptPlay();
+    };
+
+    audioElement.addEventListener('canplay', handleCanPlay);
+    return () => {
+      audioElement.removeEventListener('canplay', handleCanPlay);
+    };
   }, [currentTrackIndex, resolvedTracks]);
 
   const handlePlayTrack = (index) => {
@@ -45,11 +70,8 @@ export default function App() {
       return;
     }
 
+    playOnSelectRef.current = index;
     setCurrentTrackIndex(index);
-
-    requestAnimationFrame(() => {
-      audioRef.current?.play().catch(() => {});
-    });
   };
 
   return (
@@ -75,9 +97,6 @@ export default function App() {
                 ) : null}
               </div>
               <audio ref={audioRef} className="w-full" controls preload="metadata">
-                {currentTrackIndex !== null ? (
-                  <source src={resolvedTracks[currentTrackIndex].resolvedSrc} type="audio/mpeg" />
-                ) : null}
                 Your browser does not support the audio element.
               </audio>
             </div>
