@@ -3,7 +3,12 @@ import tracks from './data/tracks.js';
 
 const resolveAssetUrl = (path) => {
   if (!path) return '';
-  const normalized = path.startsWith('/') ? path.slice(1) : path;
+
+  if (/^(?:[a-z]+:)?\/\//i.test(path) || path.startsWith('data:')) {
+    return path;
+  }
+
+  const normalized = path.replace(/^\.\/?/, '').replace(/^\//, '');
   const base = import.meta.env.BASE_URL || '/';
   const ensuredTrailingSlash = base.endsWith('/') ? base : `${base}/`;
   return `${ensuredTrailingSlash}${normalized}`;
@@ -89,7 +94,7 @@ export default function App() {
                 const isActive = index === currentTrackIndex;
                 return (
                   <li
-                    key={track.id || track.title}
+                    key={track.id ?? track.title ?? index}
                     className="flex flex-col gap-2 rounded-md border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
