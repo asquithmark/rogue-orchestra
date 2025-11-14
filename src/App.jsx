@@ -1,30 +1,104 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import AlbumPage from './routes/AlbumPage.jsx';
-import TrackPage from './routes/TrackPage.jsx';
-import ThemeToggle from './components/ThemeToggle.jsx';
-import { usePlayer } from './context/PlayerContext.jsx';
-import { useEffect } from 'react';
-import { getDominantColor } from './utils/colorFromArtwork.js';
+import { useEffect, useRef, useState } from 'react';
+import tracks from './data/tracks.js';
 
 export default function App() {
-  const location = useLocation();
-  const { currentTrack, tracks } = usePlayer();
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(tracks.length ? 0 : null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
-    const artwork = currentTrack?.artwork || tracks[0]?.artwork;
-    const { gradient } = getDominantColor(artwork);
-    document.body.style.setProperty('--app-background-gradient', gradient);
-  }, [currentTrack, tracks]);
+    if (currentTrackIndex === null) return;
+    const audioElement = audioRef.current;
+    if (!audioElement) return;
+
+    const track = tracks[currentTrackIndex];
+    if (!track) return;
+
+    if (audioElement.src !== new URL(track.src, window.location.origin).toString()) {
+      audioElement.src = track.src;
+    }
+  }, [currentTrackIndex]);
+
+  const handlePlayTrack = (index) => {
+    if (index === currentTrackIndex) {
+      audioRef.current?.play().catch(() => {});
+      return;
+    }
+
+    setCurrentTrackIndex(index);
+
+    requestAnimationFrame(() => {
+      audioRef.current?.play().catch(() => {});
+    });
+  };
 
   return (
-    <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.45),_rgba(17,24,39,0.95))] dark:bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.9),_rgba(2,6,23,0.96))] transition-colors duration-500">
-      <div className="relative mx-auto flex min-h-screen max-w-screen-sm flex-col px-4 pb-6 pt-6 sm:px-6">
-        <ThemeToggle />
-        <Routes location={location}>
-          <Route path="/" element={<AlbumPage />} />
-          <Route path="/track/:id" element={<TrackPage />} />
-        </Routes>
-      </div>
+    <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-4 py-10 sm:px-8">
+      <header className="flex flex-col gap-2 text-center">
+        <h1 className="text-3xl font-semibold text-slate-900">Rogue Orchestra</h1>
+        <p className="text-base text-slate-600">
+          A simple list of tracks you can play right in your browser.
+        </p>
+      </header>
+
+      <main className="flex flex-1 flex-col gap-6">
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-medium text-slate-800">Now playing</h2>
+          {currentTrackIndex === null ? (
+            <p className="mt-4 text-sm text-slate-500">Add songs to start listening.</p>
+          ) : (
+            <div className="mt-4 space-y-3">
+              <div>
+                <p className="text-base font-medium text-slate-900">{tracks[currentTrackIndex].title}</p>
+                {tracks[currentTrackIndex].credits ? (
+                  <p className="text-sm text-slate-500">{tracks[currentTrackIndex].credits}</p>
+                ) : null}
+              </div>
+              <audio ref={audioRef} className="w-full" controls preload="metadata">
+                {currentTrackIndex !== null ? (
+                  <source src={tracks[currentTrackIndex].src} type="audio/mpeg" />
+                ) : null}
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          )}
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-medium text-slate-800">Tracks</h2>
+          {tracks.length === 0 ? (
+            <p className="mt-4 text-sm text-slate-500">There are no tracks yet. Update src/data/tracks.js with your music.</p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {tracks.map((track, index) => {
+                const isActive = index === currentTrackIndex;
+                return (
+                  <li
+                    key={track.id}
+                    className="flex flex-col gap-2 rounded-md border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="text-base font-medium text-slate-900">{track.title}</p>
+                      {track.credits ? <p className="text-sm text-slate-500">{track.credits}</p> : null}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {isActive ? (
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">Playing</span>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => handlePlayTrack(index)}
+                        className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                      >
+                        {isActive ? 'Play again' : 'Play'}
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      </main>
     </div>
   );
 }

@@ -1,6 +1,6 @@
-# the rogue orchestra · local player
+# Rogue Orchestra · simple player
 
-A local-first, Apple iOS "liquid glass" inspired music player built with React, Vite, and Tailwind CSS. Everything runs directly in the browser with your own audio files—no accounts, analytics, or network calls.
+A lightweight music player built with React, Vite, and Tailwind CSS. It shows a list of your songs and lets you play them with the browser's built-in audio controls—no routing, themes, or advanced playback features.
 
 ## Getting started
 
@@ -26,19 +26,14 @@ A local-first, Apple iOS "liquid glass" inspired music player built with React, 
 
 ## Add your music
 
-- Place audio files in `public/audio/` and artwork images in `public/artwork/`.
-- Update `src/data/tracks.js` with the correct filenames, artwork paths, song titles, and credits. The placeholders are intentionally generic so you can supply the real information.
-- The first entry in `tracks.js` is used for the album hero artwork.
-
-## Customise the background tint
-
-`src/utils/colorFromArtwork.js` currently returns a high-quality fallback gradient. When you are ready, replace the placeholder logic with a real dominant-colour extractor (for example, use an offscreen canvas to average pixels) and update the returned gradient or base colour.
+- Place audio files in `public/audio/`.
+- Update `src/data/tracks.js` with the correct filenames, artwork paths, song titles, and credits. You can leave `credits` blank if you do not need to display them.
+- The first entry in `tracks.js` is loaded by default when the page opens.
 
 ## How playback works
 
-- Audio playback is handled by the browser’s `<audio>` element inside `PlayerContext`.
-- When a track plays, the Media Session API updates the system metadata so iOS lock screen and Control Centre controls show the right information and artwork.
-- Playback continues as you navigate between the album page (`/`) and the full player view (`/track/:id`).
+- The player uses a single `<audio>` element. When you click "Play" next to any track it updates the source and starts playback.
+- The browser provides the playback controls (play/pause, scrubber, and volume), so there is no custom UI to maintain.
 
 ## Privacy and offline use
 
